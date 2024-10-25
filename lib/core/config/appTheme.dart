@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_group7/core/config/theme/appColors.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
 
