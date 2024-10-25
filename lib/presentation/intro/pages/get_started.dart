@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_group7/common/widget/button/basicButton.dart';
+import 'package:spotify_group7/core/config/assets/app_images.dart';
 import 'package:spotify_group7/core/config/theme/appColors.dart';
+import 'package:spotify_group7/presentation/choose_mode/pages/choose_mode.dart';
 
 class GetStartedPage extends StatelessWidget {
   const GetStartedPage({super.key});
@@ -16,7 +18,7 @@ class GetStartedPage extends StatelessWidget {
                 image: DecorationImage(
                     repeat: ImageRepeat.repeatY,
                     image: AssetImage(
-                      "assets/images/intro_bg.png",
+                      AppImages.intro_bg,
                     ))),
           ),
           Container(
@@ -45,8 +47,8 @@ class GetStartedPage extends StatelessWidget {
                 end: Alignment.topCenter,
                 stops: [
                   0.0,
-                  0.2,
-                  0.4
+                  0.3,
+                  0.5
                 ],
                 colors: <Color>[
                   AppColors.darkBG,
@@ -67,7 +69,7 @@ class GetStartedPage extends StatelessWidget {
                 Align(
                   alignment: Alignment.topCenter,
                   child: Image.asset(
-                    "assets/images/spotify_logo.png",
+                    AppImages.spotify_logo,
                     height: 75,
                     width: 150,
                   ),
@@ -96,7 +98,17 @@ class GetStartedPage extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                BasicButton(onPressed: () {}, title: "Get Started")
+                BasicButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => const ChooseModePage()
+                      )
+                    );
+                  }, 
+                  
+                title: "Get Started")
               ],
             ),
           )
