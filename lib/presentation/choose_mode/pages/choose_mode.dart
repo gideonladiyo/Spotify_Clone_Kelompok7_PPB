@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spotify_group7/common/widget/button/basicButton.dart';
 import 'package:spotify_group7/core/config/assets/app_images.dart';
 import 'package:spotify_group7/core/config/theme/appColors.dart';
+import 'package:spotify_group7/presentation/home/pages/home.dart';
 
 class ChooseModePage extends StatelessWidget {
   const ChooseModePage({super.key});
@@ -126,7 +127,7 @@ class ChooseModePage extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  const ChooseModePage()));
+                                  const HomePages()));
                     },
                     title: "Continue")
               ],
