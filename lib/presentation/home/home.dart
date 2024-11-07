@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_group7/design_system/widgets/bottomnav/bottomNav.dart';
 // import 'package:spotify_group7/common/widget/bottomNav.dart/bottomNav.dart';
 
 class HomePages extends StatelessWidget {
@@ -6,7 +7,7 @@ class HomePages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return BottomNavbar();
-    return Scaffold();
+    return BottomNavbar();
+    // return Scaffold();
   }
 }

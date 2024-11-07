@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_group7/design_system/styles/app_colors.dart';
 import 'package:spotify_group7/design_system/styles/image_col.dart';
-import 'package:spotify_group7/presentation/choose_mode/pages/choose_mode.dart';
+import 'package:spotify_group7/design_system/styles/padding_col.dart';
+import 'package:spotify_group7/design_system/styles/typograph_col.dart';
+import 'package:spotify_group7/design_system/widgets/button/custom_button.dart';
+import 'package:spotify_group7/presentation/choose_mode/choose_mode.dart';
 
 class GetStartedPage extends StatelessWidget {
   const GetStartedPage({super.key});
@@ -12,8 +15,8 @@ class GetStartedPage extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            padding: EdgeInsets.symmetric(vertical: 40, horizontal: 40),
-            decoration: BoxDecoration(
+            padding:const EdgeInsets.symmetric(vertical: 40, horizontal: 40),
+            decoration: const BoxDecoration(
                 image: DecorationImage(
                     repeat: ImageRepeat.repeatY,
                     image: AssetImage(
@@ -21,7 +24,7 @@ class GetStartedPage extends StatelessWidget {
                     ))),
           ),
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -40,7 +43,7 @@ class GetStartedPage extends StatelessWidget {
           ),
           // Gradien bawah ke atas
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
@@ -57,9 +60,8 @@ class GetStartedPage extends StatelessWidget {
               ),
             ),
           ),
-
           Container(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               vertical: 40,
               horizontal: 40
             ),
@@ -73,8 +75,8 @@ class GetStartedPage extends StatelessWidget {
                     width: 150,
                   ),
                 ),
-                Spacer(),
-                Text(
+                const Spacer(),
+                const Text(
                   "Music for everyone",
                   style: TextStyle(
                     fontSize: 24,
@@ -82,21 +84,34 @@ class GetStartedPage extends StatelessWidget {
                     color: AppColors.primaryColor,
                   ),
                 ),
-                SizedBox(
-                  height: 20,
+                const SizedBox(
+                  height: PaddingCol.lg,
                 ),
                 Text(
                   "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                  ),
+                  style: TypographCol.p1,
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(
-                  height: 20,
+                const SizedBox(
+                  height: PaddingCol.xxxl,
                 ),
+                BasicButton(
+                  title: 'Get Started',
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (BuildContext context) => const ChooseModePage()
+                    ));
+                  },
+                  height: 72,
+                  backgroundColor: AppColors.buttonColor,
+                  textColor: AppColors.darkBG,
+                  textStyle:
+                      TypographCol.h1,
+                  borderRadius: 80,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                  elevation: 4.0,
+                )
               ],
             ),
           )
