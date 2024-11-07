@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_group7/common/widget/button/basicButton.dart';
-import 'package:spotify_group7/core/config/assets/app_images.dart';
-import 'package:spotify_group7/core/config/theme/appColors.dart';
+import 'package:spotify_group7/design_system/styles/app_colors.dart';
+import 'package:spotify_group7/design_system/styles/image_col.dart';
 import 'package:spotify_group7/presentation/choose_mode/pages/choose_mode.dart';
 
 class GetStartedPage extends StatelessWidget {
@@ -80,7 +79,7 @@ class GetStartedPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
+                    color: AppColors.primaryColor,
                   ),
                 ),
                 SizedBox(
@@ -98,17 +97,6 @@ class GetStartedPage extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                BasicButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => const ChooseModePage()
-                      )
-                    );
-                  }, 
-                  
-                title: "Get Started")
               ],
             ),
           )

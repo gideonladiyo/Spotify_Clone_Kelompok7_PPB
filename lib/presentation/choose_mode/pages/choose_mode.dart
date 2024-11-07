@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_group7/common/widget/button/basicButton.dart';
-import 'package:spotify_group7/core/config/assets/app_images.dart';
-import 'package:spotify_group7/core/config/theme/appColors.dart';
+import 'package:spotify_group7/design_system/styles/app_colors.dart';
+import 'package:spotify_group7/design_system/styles/image_col.dart';
 import 'package:spotify_group7/presentation/home/pages/home.dart';
 
 class ChooseModePage extends StatelessWidget {
@@ -68,7 +67,7 @@ class ChooseModePage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.lightBG,
+                    color: AppColors.whiteBG,
                   ),
                 ),
                 SizedBox(
@@ -83,15 +82,17 @@ class ChooseModePage extends StatelessWidget {
                           height: 75,
                           width: 75,
                           decoration: BoxDecoration(
-                            image: DecorationImage(image: AssetImage(AppImages.bulan)),
-                              color: Color(0xff111111), shape: BoxShape.circle),
+                              image: DecorationImage(
+                                  image: AssetImage(AppImages.bulan)),
+                              color: Color(0xff111111),
+                              shape: BoxShape.circle),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Text(
                           "Dark Mode",
-                          style: TextStyle(
-                            fontSize: 14
-                          ),
+                          style: TextStyle(fontSize: 14),
                         )
                       ],
                     ),
@@ -104,8 +105,10 @@ class ChooseModePage extends StatelessWidget {
                           height: 75,
                           width: 75,
                           decoration: BoxDecoration(
-                            image: DecorationImage(image: AssetImage(AppImages.matahari)),
-                              color: Color(0xff333333), shape: BoxShape.circle),
+                              image: DecorationImage(
+                                  image: AssetImage(AppImages.matahari)),
+                              color: Color(0xff333333),
+                              shape: BoxShape.circle),
                         ),
                         SizedBox(
                           height: 10,
@@ -121,15 +124,6 @@ class ChooseModePage extends StatelessWidget {
                 SizedBox(
                   height: 50,
                 ),
-                BasicButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const HomePages()));
-                    },
-                    title: "Continue")
               ],
             ),
           )

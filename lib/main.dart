@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_group7/core/config/appTheme.dart';
+import 'package:spotify_group7/design_system/styles/app_colors.dart';
 import 'package:spotify_group7/presentation/home/pages/home.dart';
 import 'package:spotify_group7/presentation/splash/pages/splash.dart';
 
@@ -10,11 +10,13 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: AppTheme.darkTheme,
-      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
+        useMaterial3: true,
+      ),
       home: const SplashPage(),
     );
   }

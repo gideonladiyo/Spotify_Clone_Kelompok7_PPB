@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_group7/core/config/theme/appColors.dart';
+import 'package:spotify_group7/design_system/styles/app_colors.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({super.key});
@@ -58,7 +58,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
         currentIndex: selectedIndex,
-        selectedItemColor: AppColors.primary,
+        selectedItemColor: AppColors.primaryColor,
         onTap: onTapped,
       ),
     );
