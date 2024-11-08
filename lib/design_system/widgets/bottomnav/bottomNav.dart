@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_group7/design_system/styles/app_colors.dart';
+import 'package:spotify_group7/design_system/widgets/song_card/custom_song_card.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({super.key});

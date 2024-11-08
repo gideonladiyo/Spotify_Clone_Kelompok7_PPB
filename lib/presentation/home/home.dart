@@ -8,6 +8,5 @@ class HomePages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavbar();
-    // return Scaffold();
   }
 }
