@@ -134,7 +134,7 @@ class ChooseModePage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                const HomePages()));
+                                const Home()));
                   },
                   height: 72,
                   backgroundColor: AppColors.buttonColor,

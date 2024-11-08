@@ -3,7 +3,18 @@ import 'package:spotify_group7/design_system/styles/app_colors.dart';
 import 'package:spotify_group7/design_system/widgets/song_card/custom_song_card.dart';
 
 class BottomNavbar extends StatefulWidget {
-  const BottomNavbar({super.key});
+  final Widget home;
+  final Widget playlist;
+  final Widget histoy;
+  final Widget profile;
+
+  const BottomNavbar({
+    super.key,
+    required this.home,
+    required this.playlist,
+    required this.histoy,
+    required this.profile
+  });
 
   @override
   State<BottomNavbar> createState() => _BottomNavbarState();
@@ -17,23 +28,11 @@ class _BottomNavbarState extends State<BottomNavbar> {
     fontWeight: FontWeight.bold
   );
 
-  static const List<Widget> widgetOptions = <Widget>[
-    Text(
-      "Home",
-      style: optionStyle,
-    ),
-    Text(
-      "Playlist",
-      style: optionStyle,
-    ),
-    Text(
-      "History",
-      style: optionStyle,
-    ),
-    Text(
-      "Profil",
-      style: optionStyle,
-    )
+  List<Widget> get widgetOptions => [
+    widget.home,
+    widget.playlist,
+    widget.histoy,
+    widget.home
   ];
 
   void onTapped(int index){
