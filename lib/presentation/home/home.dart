@@ -11,11 +11,13 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavbar(
-      home: HomePage(), 
-      playlist: Playlist(), 
-      histoy: History(), 
-      profile: Profile()
+    return SafeArea(
+      child: BottomNavbar(
+        home: HomePage(), 
+        playlist: Playlist(), 
+        histoy: History(), 
+        profile: Profile()
+      ),
     );
   }
 }

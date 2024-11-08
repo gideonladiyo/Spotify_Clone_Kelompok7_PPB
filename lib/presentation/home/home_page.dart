@@ -5,8 +5,14 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      "Home",
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Text(
+            "tes"
+          ),
+        )
+      ],
     );
   }
 }
