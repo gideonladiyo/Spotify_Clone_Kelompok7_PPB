@@ -26,11 +26,16 @@ class CustomSongCard extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Image.asset(
-                imagePath,
+              // Image.asset(
+              //   imagePath,
+              //   height: 150,
+              //   width: 150,
+              //   fit: BoxFit.cover,
+              // ),
+              Container(
                 height: 150,
                 width: 150,
-                fit: BoxFit.cover,
+                color: Colors.white,
               ),
               const Positioned(
                 bottom: 8,

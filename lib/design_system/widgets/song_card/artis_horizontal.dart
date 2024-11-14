@@ -22,13 +22,14 @@ class ArtisHorizontal extends StatelessWidget {
           Container(
             width: 80,
             height: 80,
-            color: AppColors.secondaryColor,
             decoration: BoxDecoration(
+              color: AppColors.secondaryColor,
               shape: BoxShape.circle,
             ),
           ),
           SizedBox(width: PaddingCol.lg,),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,

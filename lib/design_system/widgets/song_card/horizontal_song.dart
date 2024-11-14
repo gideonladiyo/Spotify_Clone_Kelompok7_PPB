@@ -25,8 +25,8 @@ class HorizontalSong extends StatelessWidget {
                 Container(
                   width: 60,
                   height: 60,
-                  color: AppColors.secondaryColor,
                   decoration: BoxDecoration(
+                    color: AppColors.secondaryColor,
                     borderRadius: BorderRadius.circular(12)
                   ),
                 ),
