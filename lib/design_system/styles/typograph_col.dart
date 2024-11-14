@@ -30,6 +30,13 @@ class TypographCol {
     ),
   );
 
+  static final TextStyle h5 = GoogleFonts.montserrat(
+    textStyle: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w600
+    )
+  );
+
   static final TextStyle p1 = GoogleFonts.montserrat(
     textStyle: const TextStyle(
       fontSize: 14,
