@@ -8,7 +8,7 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.darkBG,
       appBar: AppBar(
         backgroundColor: AppColors.secondaryColor,
         elevation: 0,
@@ -49,7 +49,7 @@ class Profile extends StatelessWidget {
                 SizedBox(height: 5),
                 Text(
                   "kelompokpbp7@gmail.com",
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                  style: TextStyle(fontSize: 14),
                 ),
                 SizedBox(height: 30),
                 Row(
@@ -57,8 +57,7 @@ class Profile extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        Text("Followers",
-                            style: TextStyle(color: Colors.grey, fontSize: 12)),
+                        Text("Followers", style: TextStyle(fontSize: 12)),
                         SizedBox(height: 5),
                         Text("5",
                             style: TextStyle(
@@ -68,8 +67,7 @@ class Profile extends StatelessWidget {
                     SizedBox(width: 100),
                     Column(
                       children: [
-                        Text("Following",
-                            style: TextStyle(color: Colors.grey, fontSize: 12)),
+                        Text("Following", style: TextStyle(fontSize: 12)),
                         SizedBox(height: 5),
                         Text("5",
                             style: TextStyle(
@@ -88,7 +86,7 @@ class Profile extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(vertical: 15),
             decoration: BoxDecoration(
-              color: Colors.black,
+              color: AppColors.darkBG,
               boxShadow: [
                 BoxShadow(
                   color: Colors.white.withOpacity(0.2),
@@ -185,7 +183,7 @@ class MusicTile extends StatelessWidget {
             Image.network(imageUrl, width: 50, height: 50, fit: BoxFit.cover),
       ),
       title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(artist, style: TextStyle(color: Colors.grey)),
+      subtitle: Text(artist),
       trailing: Icon(Icons.more_vert, color: Colors.white),
       onTap: () {},
     );
