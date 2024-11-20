@@ -25,7 +25,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   List<Widget> get widgetOptions =>
-      [widget.home, widget.playlist, widget.histoy, widget.home];
+      [widget.home, widget.playlist, widget.histoy, widget.profile];
 
   void onTapped(int index) {
     setState(() {
