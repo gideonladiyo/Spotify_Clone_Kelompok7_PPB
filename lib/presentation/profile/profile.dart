@@ -121,7 +121,7 @@ class Profile extends StatelessWidget {
                 ],
               ),
             ),
-
+            
             SizedBox(height: 20),
 
             // Mostly Played Section
@@ -140,7 +140,7 @@ class Profile extends StatelessWidget {
             SizedBox(
               height: 300,
               child: ListView(
-                shrinkWrap: true, // Prevent ListView from taking infinite height // Disable ListView's scrolling
+                shrinkWrap: true,
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 children: [
                   MusicTile(

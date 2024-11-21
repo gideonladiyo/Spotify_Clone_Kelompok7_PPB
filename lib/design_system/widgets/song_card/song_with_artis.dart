@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class MusicTile extends StatelessWidget {
+  // final String id_song;
   final String title;
   final String artist;
   final String imageUrl;
 
   const MusicTile({
+    // required this.id_song,
     required this.title,
     required this.artist,
     required this.imageUrl,
