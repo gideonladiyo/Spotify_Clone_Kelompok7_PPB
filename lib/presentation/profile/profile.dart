@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_group7/design_system/styles/app_colors.dart';
 import 'package:spotify_group7/design_system/styles/padding_col.dart';
+import 'package:spotify_group7/design_system/widgets/song_card/song_with_artis.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -182,30 +183,3 @@ class Profile extends StatelessWidget {
   }
 }
 
-class MusicTile extends StatelessWidget {
-  final String title;
-  final String artist;
-  final String imageUrl;
-
-  const MusicTile({
-    required this.title,
-    required this.artist,
-    required this.imageUrl,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(vertical: 8),
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child:
-            Image.network(imageUrl, width: 50, height: 50, fit: BoxFit.cover),
-      ),
-      title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(artist),
-      trailing: Icon(Icons.more_vert, color: Colors.white),
-      onTap: () {},
-    );
-  }
-}
