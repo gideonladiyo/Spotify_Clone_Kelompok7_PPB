@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  children: [
+                  children: const [
                     CustomSongCard(
                       id_song: 1,
                       imagePath: "imagePath",
