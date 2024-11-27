@@ -36,7 +36,7 @@ class ListAlbumHome extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black, // Sesuaikan warna background
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, // Jumlah kolom per baris
@@ -48,6 +48,7 @@ class ListAlbumHome extends StatelessWidget {
           itemBuilder: (context, index) {
             final song = songs[index];
             return CustomSongCard(
+              onPressed: () {},
               id_song: song["id_song"],
               imagePath: song["imagePath"],
               title1: song["title1"],

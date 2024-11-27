@@ -18,8 +18,12 @@ class ArtistTile extends StatelessWidget {
       contentPadding: EdgeInsets.symmetric(vertical: 8),
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child:
-            Image.network(imageUrl, width: 75, height: 75, fit: BoxFit.cover),
+        child: Container(
+          height: 75,
+          width: 75,
+          color: Colors.grey,
+        )
+            // Image.network(imageUrl, width: 75, height: 75, fit: BoxFit.cover),
       ),
       title: Text(artist, style: TypographCol.h3),
       // subtitle: Text(like, style: TypographCol.p2,),

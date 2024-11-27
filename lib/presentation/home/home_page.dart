@@ -4,6 +4,7 @@ import 'package:spotify_group7/design_system/styles/typograph_col.dart';
 import 'package:spotify_group7/design_system/widgets/song_card/custom_song_card.dart';
 import 'package:spotify_group7/presentation/home/list_album.dart';
 import 'package:spotify_group7/presentation/home/list_artist.dart';
+import 'package:spotify_group7/presentation/music_player/music_player.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -44,40 +45,53 @@ class HomePage extends StatelessWidget {
               ),
               SizedBox(height: PaddingCol.md),
               SizedBox(
-                height: 200, // Tinggi tetap untuk ListView horizontal
+                height: 250, // Tinggi tetap untuk ListView horizontal
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  children: const [
+                  children: [
                     CustomSongCard(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const MusicPlayer(
+                                      trackId: '4kMQVpke2L9tlWOINuAo07?si=93d305cb90914f44',
+                                    )));
+                      },
                       id_song: 1,
                       imagePath: "imagePath",
                       title1: "Title 1",
                       title2: "Subtitle 1",
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     CustomSongCard(
+                      onPressed: (){},
                       id_song: 2,
                       imagePath: "imagePath",
                       title1: "Title 2",
                       title2: "Subtitle 2",
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     CustomSongCard(
+                      onPressed: () {},
                       id_song: 3,
                       imagePath: "imagePath",
                       title1: "Title 3",
                       title2: "Subtitle 3",
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     CustomSongCard(
+                      onPressed: () {},
                       id_song: 4,
                       imagePath: "imagePath",
                       title1: "Title 4",
                       title2: "Subtitle 4",
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     CustomSongCard(
+                      onPressed: () {},
                       id_song: 5,
                       imagePath: "imagePath",
                       title1: "Title 5",

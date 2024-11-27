@@ -3,6 +3,7 @@ import 'package:spotify_group7/design_system/styles/padding_col.dart';
 import 'package:spotify_group7/design_system/styles/typograph_col.dart';
 
 class CustomSongCard extends StatelessWidget {
+  final VoidCallback onPressed;
   final int id_song;
   final String imagePath;
   final String title1;
@@ -10,6 +11,7 @@ class CustomSongCard extends StatelessWidget {
 
   const CustomSongCard({
     super.key,
+    required this.onPressed,
     required this.id_song,
     required this.imagePath,
     required this.title1,
@@ -18,48 +20,55 @@ class CustomSongCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // Image.asset(
-              //   imagePath,
-              //   height: 150,
-              //   width: 150,
-              //   fit: BoxFit.cover,
-              // ),
-              Container(
-                height: 150,
-                width: 150,
-                color: Colors.white,
-              ),
-              const Positioned(
-                bottom: 8,
-                right: 8,
-                child: Icon(
-                  Icons.play_circle_fill,
+    return ElevatedButton(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Image.asset(
+                //   imagePath,
+                //   height: 150,
+                //   width: 150,
+                //   fit: BoxFit.cover,
+                // ),
+                Container(
+                  height: 150,
+                  width: 150,
                   color: Colors.white,
-                  size: 30,
                 ),
-              )
-            ],
+                const Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: Icon(
+                    Icons.play_circle_fill,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: PaddingCol.sm,),
-        Text(
-          title1,
-          style: TypographCol.h4,
-        ),
-        const SizedBox(height: PaddingCol.xs,),
-        Text(
-          title2,
-          style: TypographCol.p2,
-        )
-      ],
+          const SizedBox(height: PaddingCol.sm,),
+          Text(
+            title1,
+            style: TypographCol.h4,
+          ),
+          const SizedBox(height: PaddingCol.xs,),
+          Text(
+            title2,
+            style: TypographCol.p2,
+          )
+        ],
+      ),
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.transparent, // Menghapus warna latar belakang
+        elevation: 0, // Menghapus bayangan
+      ),
     );
   }
 }
