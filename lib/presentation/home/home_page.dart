@@ -62,8 +62,8 @@ class HomePage extends StatelessWidget {
                       },
                       id_song: 1,
                       imagePath: "imagePath",
-                      title1: "Title 1",
-                      title2: "Subtitle 1",
+                      title1: "Die With A Smile",
+                      title2: "Lady Gaga",
                     ),
                     const SizedBox(width: 16),
                     CustomSongCard(
