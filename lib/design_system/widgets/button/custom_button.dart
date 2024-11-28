@@ -30,9 +30,9 @@ class BasicButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        foregroundColor: textColor, 
+        foregroundColor: textColor,
         backgroundColor: backgroundColor,
-        minimumSize: Size.fromHeight(height ?? 80),
+        minimumSize: Size.fromHeight(height ?? 40),
         padding: padding,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius!),
