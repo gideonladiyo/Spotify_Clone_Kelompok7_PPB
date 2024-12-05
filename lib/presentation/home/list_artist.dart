@@ -13,29 +13,29 @@ class ListArtistHome extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         children: [
           ArtistTile(
-            artist: "Matilda",
+            artist: "Bernadya",
             // like: "Harry Styles",
-            imageUrl: "https://via.placeholder.com/50",
+            imageUrl: "https://i.scdn.co/image/ab6761610000e5eb6d1dbc1a4a286b1ee9d40163",
+          ),
+          ArtistTile(
+            artist: "Juicy Luicy",
+            // like: "Harry Styles",
+            imageUrl: "https://i.scdn.co/image/ab6761610000e5eb8a7372e657292fbcbde93caf",
           ),
           ArtistTile(
             artist: "Matilda",
             // like: "Harry Styles",
-            imageUrl: "https://via.placeholder.com/50",
+            imageUrl: "https://placehold.co/150x150",
           ),
           ArtistTile(
             artist: "Matilda",
             // like: "Harry Styles",
-            imageUrl: "https://via.placeholder.com/50",
+            imageUrl: "https://placehold.co/150x150",
           ),
           ArtistTile(
             artist: "Matilda",
             // like: "Harry Styles",
-            imageUrl: "https://via.placeholder.com/50",
-          ),
-          ArtistTile(
-            artist: "Matilda",
-            // like: "Harry Styles",
-            imageUrl: "https://via.placeholder.com/50",
+            imageUrl: "https://placehold.co/150x150",
           ),
         ],
       ),

@@ -40,8 +40,8 @@ class ListAlbumHome extends StatelessWidget {
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, // Jumlah kolom per baris
-            crossAxisSpacing: PaddingCol.xxxl, // Spasi antar kolom
-            mainAxisSpacing: PaddingCol.xxxl, // Spasi antar baris
+            // crossAxisSpacing: PaddingCol.md, // Spasi antar kolom
+            // mainAxisSpacing: PaddingCol.md, // Spasi antar baris
             childAspectRatio: 0.75, // Rasio aspek setiap item
           ),
           itemCount: songs.length, // Jumlah kartu yang akan ditampilkan
