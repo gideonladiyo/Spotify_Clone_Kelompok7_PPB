@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_group7/design_system/widgets/bottomnav/bottomNav.dart';
+import 'package:spotify_group7/presentation/artis/artis.dart';
 import 'package:spotify_group7/presentation/history/history.dart';
 import 'package:spotify_group7/presentation/home/home_page.dart';
 import 'package:spotify_group7/presentation/playlist/playlist.dart';
@@ -13,11 +14,10 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: BottomNavbar(
-        home: HomePage(), 
-        playlist: Playlist(), 
-        histoy: History(), 
-        profile: Profile()
-      ),
+          home: HomePage(),
+          playlist: Playlist(),
+          histoy: Artis(),
+          profile: Profile()),
     );
   }
 }
