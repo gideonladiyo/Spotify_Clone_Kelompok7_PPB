@@ -48,12 +48,12 @@ class CustomSongCard extends StatelessWidget {
           const SizedBox(height: PaddingCol.sm,),
           Text(
             title1,
-            style: TypographCol.h4.copyWith(color: Colors.white),
+            style: TypographCol.h4,
           ),
           const SizedBox(height: PaddingCol.xs,),
           Text(
             title2,
-            style: TypographCol.p2.copyWith(color: Colors.white),
+            style: TypographCol.p2,
           )
         ],
       ),

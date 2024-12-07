@@ -48,36 +48,29 @@ class _ListAlbumHomeState extends State<ListAlbumHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: albums.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: 3 / 4,
+    return Scaffold(
+      backgroundColor: Colors.black, // Sesuaikan warna background
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // Jumlah kolom per baris
+            // crossAxisSpacing: PaddingCol.md, // Spasi antar kolom
+            // mainAxisSpacing: PaddingCol.md, // Spasi antar baris
+            childAspectRatio: 0.75, // Rasio aspek setiap item
+          ),
+          itemCount: songs.length, // Jumlah kartu yang akan ditampilkan
+          itemBuilder: (context, index) {
+            final song = songs[index];
+            return CustomSongCard(
+              onPressed: () {},
+              id_song: song["id_song"],
+              imagePath: song["imagePath"],
+              title1: song["title1"],
+              title2: song["title2"],
+            );
+          },
         ),
-        itemCount: albums.length,
-        itemBuilder: (context, index) {
-          Albums album = albums[index];
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AlbumView(album: album),
-                ),
-              );
-            },
-            child: PlaylistItem(
-              title: album.title ?? "No title",
-              count: album.totalTracks.toString() ?? "0 Song",
-              imageUrl: album.imageUrl ?? 'default_image_url',
-            ),
-          );
-        },
       ),
     );
   }

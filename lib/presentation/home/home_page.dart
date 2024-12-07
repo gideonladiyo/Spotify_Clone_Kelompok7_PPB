@@ -85,29 +85,59 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: PaddingCol.md),
               SizedBox(
-                height: 250,
-                child: musicList.isEmpty ? const Center(child: CircularProgressIndicator())
-                    : Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: musicList.length,
-                    itemBuilder: (context, index) {
-                      Music music = musicList[index];
-                      return CustomSongCard(
-                          onPressed: (){
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) => MusicPlayer(music: music)
-                                )
-                            );
-                          },
-                          imagePath: music.songImage ?? "",
-                          title1: music.songName ?? "",
-                          title2: music.artistName ?? ""
-                      );
-                    },
-                  ),
+                height: 250, // Tinggi tetap untuk ListView horizontal
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  children: [
+                    CustomSongCard(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const MusicPlayer(
+                                      trackId: '2XVQdI3m0giGxNrwUhV3yP?si=31936b434d444ea1',
+                                    )));
+                      },
+                      id_song: 1,
+                      imagePath: "imagePath",
+                      title1: "Kamu",
+                      title2: "Coboy Junior",
+                    ),
+                    const SizedBox(width: 16),
+                    CustomSongCard(
+                      onPressed: (){},
+                      id_song: 2,
+                      imagePath: "imagePath",
+                      title1: "Title 2",
+                      title2: "Subtitle 2",
+                    ),
+                    const SizedBox(width: 16),
+                    CustomSongCard(
+                      onPressed: () {},
+                      id_song: 3,
+                      imagePath: "imagePath",
+                      title1: "Title 3",
+                      title2: "Subtitle 3",
+                    ),
+                    const SizedBox(width: 16),
+                    CustomSongCard(
+                      onPressed: () {},
+                      id_song: 4,
+                      imagePath: "imagePath",
+                      title1: "Title 4",
+                      title2: "Subtitle 4",
+                    ),
+                    const SizedBox(width: 16),
+                    CustomSongCard(
+                      onPressed: () {},
+                      id_song: 5,
+                      imagePath: "imagePath",
+                      title1: "Title 5",
+                      title2: "Subtitle 5",
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: PaddingCol.xxxl),
