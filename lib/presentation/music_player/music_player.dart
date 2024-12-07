@@ -49,9 +49,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
       final yt = YoutubeExplode();
       final video = (await yt.search.search("${music.songName} ${music.artistName ?? ""}")).first;
       final videoId = video.id.value;
-      if (videoId == null) {
-        throw Exception("Video ID not found");
-      }
+      music.duration = video.duration;
       widget.music.duration = video.duration;
       setState(() {
         widget.music.artistName = music.artistName;

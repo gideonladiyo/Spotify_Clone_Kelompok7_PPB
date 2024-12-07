@@ -48,19 +48,19 @@ class CustomSongCard extends StatelessWidget {
           const SizedBox(height: PaddingCol.sm,),
           Text(
             title1,
-            style: TypographCol.h4,
+            style: TypographCol.h4.copyWith(color: Colors.white),
           ),
           const SizedBox(height: PaddingCol.xs,),
           Text(
             title2,
-            style: TypographCol.p2,
+            style: TypographCol.p2.copyWith(color: Colors.white),
           )
         ],
       ),
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.transparent, // Menghapus warna latar belakang
-        elevation: 0, // Menghapus bayangan
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
     );
   }

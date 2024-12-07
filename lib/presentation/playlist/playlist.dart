@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:spotify_group7/data/functions/api.dart';
 import 'package:spotify_group7/data/functions/token_manager.dart';
 import 'package:spotify_group7/design_system/constant/list_item.dart';
+import 'package:spotify_group7/presentation/playlist/playlist_view.dart';
 
+import '../../data/functions/text_controller.dart';
 import '../../data/models/playlist.dart';
 import '../../design_system/widgets/song_card/playlist_item.dart';
 
@@ -74,10 +76,17 @@ class _PlaylistState extends State<Playlist> {
           itemCount: playlists.length,
           itemBuilder: (context, index) {
             final playlist = playlists[index];
-            return PlaylistItem(
-              title: playlist.title ?? "No title",
-              count: playlist.count ?? "0 Songs",
-              imageUrl: playlist.imageUrl ?? "default_image_url",
+            return GestureDetector(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (BuildContext builder) => PlaylistDetail(playlist: playlist)
+                ));
+              },
+              child: PlaylistItem(
+                title: truncateTitle(playlist.title ?? "No title", 24),
+                count: playlist.count ?? "0 Songs",
+                imageUrl: playlist.imageUrl ?? "default_image_url",
+              ),
             );
           },
         ),

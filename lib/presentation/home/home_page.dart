@@ -85,15 +85,15 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: PaddingCol.md),
               SizedBox(
-                height: 250, 
-                child: musicList.isEmpty ? const Center(child: CircularProgressIndicator(),)
-                : GridView.builder(
+                height: 200, // Mengatur tinggi untuk tampilan horizontal
+                child: musicList.isEmpty
+                    ? const Center(child: CircularProgressIndicator())
+                    : GridView.builder(
+                  scrollDirection: Axis.horizontal, // Orientasi horizontal
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 3 / 4
-                  ), 
+                    crossAxisCount: 1, // Tetap 1 item per baris untuk horizontal
+                    childAspectRatio: 1, // Atur agar proporsional
+                  ),
                   itemCount: musicList.length,
                   itemBuilder: (context, index) {
                     Music music = musicList[index];
@@ -102,17 +102,18 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (BuildContext context) => MusicPlayer(music: music)
-                          )
+                            builder: (BuildContext context) => MusicPlayer(music: music),
+                          ),
                         );
-                      }, 
-                      imagePath: music.songImage ?? "default_song_url", 
-                      title1: music.songName ?? "Name not Found", 
-                      title2: music.artistName ?? "Artist name not found"
+                      },
+                      imagePath: music.songImage ?? "default_song_url",
+                      title1: music.songName ?? "Name not Found",
+                      title2: music.artistName ?? "Artist name not found",
                     );
-                  }
-                )
+                  },
+                ),
               ),
+
               SizedBox(height: PaddingCol.xxxl),
               
               TabBar(

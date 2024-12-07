@@ -52,7 +52,8 @@ class _ListAlbumHomeState extends State<ListAlbumHome> {
       backgroundColor: Colors.black,
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: GridView.builder(
+        child: albums.isEmpty ? const Center(child: CircularProgressIndicator(),)
+        : GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             // crossAxisSpacing: PaddingCol.md, // Spasi antar kolom

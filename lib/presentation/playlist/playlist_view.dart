@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:spotify_group7/data/functions/api.dart';
 import 'package:spotify_group7/data/functions/token_manager.dart';
 import 'package:spotify_group7/design_system/widgets/song_card/song_with_artis.dart';
+import 'package:spotify_group7/presentation/music_player/music_player.dart';
 import '../../data/models/music.dart';
 import '../../data/models/playlist.dart';
-import '../../data/functions/api.dart';
 
 
 class PlaylistDetail extends StatefulWidget {
@@ -98,10 +98,23 @@ class _PlaylistDetailState extends State<PlaylistDetail> {
                       itemCount: musicList.length,
                       itemBuilder: (context, index) {
                         Music music = musicList[index];
-                        return MusicTile(
-                          title: music.songName ?? "Unknown song",
-                          artist: music.artistName ?? "Unknown artist", 
-                          imageUrl: music.songImage ?? "default_image_url",
+                        return GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (BuildContext builder) => MusicPlayer(music: music)
+                            ));
+                          },
+                          child: MusicTile(
+                              songPlayerDirections: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) => MusicPlayer(music: music),
+                                  ),
+                                );
+                              },
+                              deleteTap: () {},
+                              music: music)
                         );
                       },
                     ),

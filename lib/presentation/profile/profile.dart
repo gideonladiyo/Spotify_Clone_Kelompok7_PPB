@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_group7/data/models/music.dart';
 import 'package:spotify_group7/design_system/styles/app_colors.dart';
 import 'package:spotify_group7/design_system/styles/padding_col.dart';
 import 'package:spotify_group7/design_system/widgets/song_card/song_with_artis.dart';
@@ -143,36 +144,7 @@ class Profile extends StatelessWidget {
                 shrinkWrap: true,
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 children: [
-                  MusicTile(
-                    title: "Dekat Di Hati",
-                    artist: "RAN",
-                    imageUrl: "https://via.placeholder.com/50",
-                  ),
-                  MusicTile(
-                    title: "Bigger Than The Whole Sky",
-                    artist: "Taylor Swift",
-                    imageUrl: "https://via.placeholder.com/50",
-                  ),
-                  MusicTile(
-                    title: "Matilda",
-                    artist: "Harry Styles",
-                    imageUrl: "https://via.placeholder.com/50",
-                  ),
-                  MusicTile(
-                    title: "Matilda",
-                    artist: "Harry Styles",
-                    imageUrl: "https://via.placeholder.com/50",
-                  ),
-                  MusicTile(
-                    title: "Matilda",
-                    artist: "Harry Styles",
-                    imageUrl: "https://via.placeholder.com/50",
-                  ),
-                  MusicTile(
-                    title: "Matilda",
-                    artist: "Harry Styles",
-                    imageUrl: "https://via.placeholder.com/50",
-                  ),
+
                 ],
               ),
             ),

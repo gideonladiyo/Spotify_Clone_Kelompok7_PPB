@@ -1,31 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_group7/data/models/music.dart';
 
 class MusicTile extends StatelessWidget {
-  // final String id_song;
-  final String title;
-  final String artist;
-  final String imageUrl;
+  final VoidCallback songPlayerDirections;
+  final VoidCallback deleteTap;
+  final Music music;
 
   const MusicTile({
-    // required this.id_song,
-    required this.title,
-    required this.artist,
-    required this.imageUrl,
+    required this.songPlayerDirections,
+    required this.deleteTap,
+    required this.music,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(vertical: 8),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8),
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child:
-            Image.network(imageUrl, width: 60, height: 60, fit: BoxFit.cover),
+        child: Image.network(
+          music.songImage ?? "default_image_url",
+          width: 60,
+          height: 60,
+          fit: BoxFit.cover,
+        ),
       ),
-      title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(artist),
-      trailing: Icon(Icons.more_vert, color: Colors.white),
-      onTap: () {},
+      title: Text(
+        music.songName ?? "No music",
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(music.artistName ?? "No artist"),
+      trailing: PopupMenuButton<String>(
+        padding: EdgeInsets.zero,
+        icon: const Icon(Icons.more_vert, color: Colors.white),
+        onSelected: (value) {
+          if (value == 'delete') {
+            deleteTap();
+          }
+        },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          const PopupMenuItem<String>(
+            value: 'delete',
+            child: ListTile(
+              leading: Icon(Icons.delete),
+              title: Text('Delete'),
+            ),
+          ),
+        ],
+      ),
+      onTap: songPlayerDirections,
     );
   }
 }

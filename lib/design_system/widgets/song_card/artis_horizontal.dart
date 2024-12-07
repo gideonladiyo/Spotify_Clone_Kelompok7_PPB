@@ -1,34 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_group7/design_system/styles/typograph_col.dart';
 
+import '../../../data/models/artists.dart';
+
 class ArtistTile extends StatelessWidget {
-  final String artist;
-  // final String like;
-  final String imageUrl;
+  final Artists artist;
+  final double tileHeight; // Tambahkan parameter tinggi
 
   const ArtistTile({
     required this.artist,
-    // required this.like,
-    required this.imageUrl,
+    this.tileHeight = 100, // Default tinggi jika tidak ditentukan
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(vertical: 8),
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          height: 75,
-          width: 75,
-          color: Colors.grey,
-        )
-            // Image.network(imageUrl, width: 75, height: 75, fit: BoxFit.cover),
+    return SizedBox(
+      height: tileHeight, // Tinggi fleksibel
+      width: double.infinity,
+      child: Center(
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(vertical: 8),
+          leading: Container(
+            width: tileHeight - 20,
+            height: tileHeight - 20,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: NetworkImage(artist.imageUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          title: Text(artist.name, style: TypographCol.h3),
+          trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),
+          onTap: () {},
+        ),
       ),
-      title: Text(artist, style: TypographCol.h3),
-      // subtitle: Text(like, style: TypographCol.p2,),
-      trailing: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),
-      onTap: () {},
     );
   }
 }
+
