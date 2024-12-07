@@ -1,52 +1,53 @@
 import 'package:flutter/material.dart';
-
+import 'package:spotify_group7/data/functions/token_manager.dart';
+import 'package:spotify_group7/presentation/playlist/playlist_view.dart';
+import '../../data/functions/api.dart';
 import '../../data/models/playlist.dart';
+import '../../design_system/constant/list_item.dart';
 import '../../design_system/widgets/song_card/playlist_item.dart';
 
-class Playlist extends StatelessWidget {
+class Playlist extends StatefulWidget {
   const Playlist({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final playlists = [
-      {
-        "title": "Liked Songs",
-        "count": "128 songs",
-        "image":
-        "https://media.istockphoto.com/id/1357329323/id/foto/dengarkan-konsep-buku-audio-aplikasi-pemutar-musik-online-di-smartphone.jpg?s=612x612&w=0&k=20&c=eDbUzqVTNftf9LEXwz28lNaPODNJ_xr9izltfc09lG0="
-      },
-      {
-        "title": "Happiers",
-        "count": "45 songs",
-        "image":
-        "https://i.scdn.co/image/ab67616d0000b273ad0f80c4b39d4eaa426a89a4"
-      },
-      {
-        "title": "Sadness",
-        "count": "83 songs",
-        "image":
-        "https://i.scdn.co/image/ab67616d0000b27388b99a0bf2e68752268acb5c"
-      },
-      {
-        "title": "Party",
-        "count": "21 songs",
-        "image":
-        "https://i.scdn.co/image/ab67616d0000b27383d92f1189defa34863e5343"
-      },
-      {
-        "title": "Birthday",
-        "count": "10 songs",
-        "image":
-        "https://mir-s3-cdn-cf.behance.net/project_modules/1400_opt_1/cc2e0e126904701.61374423b03c3.jpg"
-      },
-      {
-        "title": "Highschool",
-        "count": "5 songs",
-        "image":
-        "https://tse1.mm.bing.net/th?id=OIP.kqlDMBl2lA-9PkwRq406lwHaLK&pid=Api&P=0&h=180"
-      },
-    ].map((playlist) => PlaylistModel.fromMap(playlist)).toList();
+  State<Playlist> createState() => _PlaylistState();
+}
 
+class _PlaylistState extends State<Playlist> {
+  List<PlaylistModel> playlists = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPlaylists();
+  }
+  _loadPlaylists() async {
+    List<PlaylistModel> loadedPlaylists = [];
+    for (String playlistId in listIdPlaylist) {
+      try {
+        bool isTokenValid = await TokenManager.refreshAccessToken();
+
+        if (!isTokenValid){
+          print("Failed to refresh access token. Skip playlist id $playlistId");
+          continue;
+        }
+
+        PlaylistModel playlistData = await PlaylistApi.fetchPlaylist(playlistId);
+
+        loadedPlaylists.add(playlistData);
+      } catch (e) {
+        print('Error loading playlist $playlistId: $e');
+      }
+    }
+
+    setState(() {
+      playlists = loadedPlaylists;
+    });
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Playlist"),
@@ -60,7 +61,9 @@ class Playlist extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: GridView.builder(
+        child: playlists.isEmpty
+            ? const Center(child: CircularProgressIndicator())
+            : GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 10,
@@ -70,10 +73,22 @@ class Playlist extends StatelessWidget {
           itemCount: playlists.length,
           itemBuilder: (context, index) {
             final playlist = playlists[index];
-            return PlaylistItem(
-              title: playlist.title,
-              count: playlist.count,
-              imageUrl: playlist.imageUrl,
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PlaylistDetail(
+                      playlist: playlist,
+                    ),
+                  ),
+                );
+              },
+              child: PlaylistItem(
+                title: playlist.title ?? "No title",
+                count: playlist.count ?? "0 Song",
+                imageUrl: playlist.imageUrl ?? 'default_image_url',
+              ),
             );
           },
         ),

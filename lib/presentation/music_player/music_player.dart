@@ -9,9 +9,12 @@ import 'package:spotify_group7/design_system/styles/app_colors.dart';
 import 'package:spotify_group7/design_system/widgets/art_work_image.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
+import '../../data/functions/api.dart';
+import '../../data/functions/token_manager.dart';
+
 class MusicPlayer extends StatefulWidget {
-  final String trackId;
-  const MusicPlayer({super.key, required this.trackId});
+  final Music music;
+  const MusicPlayer({super.key, required this.music});
 
   @override
   State<MusicPlayer> createState() => _MusicPlayerState();
@@ -19,7 +22,6 @@ class MusicPlayer extends StatefulWidget {
 
 class _MusicPlayerState extends State<MusicPlayer> {
   final player = AudioPlayer();
-  late Music music;
 
   @override
   void dispose() {
@@ -29,50 +31,50 @@ class _MusicPlayerState extends State<MusicPlayer> {
 
   @override
   void initState() {
-    music = Music(trackId: widget.trackId);
-    final credentials = SpotifyApiCredentials(
-        CustomStrings.clientId, CustomStrings.clientSecret);
-    final spotify = SpotifyApi(credentials);
-    spotify.tracks.get(music.trackId).then((track) async {
-      String? tempSongName = track.name;
-      if (tempSongName != null) {
-        music.songName = tempSongName;
-        music.artistName = track.artists?.first.name ?? "";
-        String? image = track.album?.images?.first.url;
-        if (image != null) {
-          music.songImage = image;
-          final tempSongColor = await getImagePalette(NetworkImage(image));
-          if (tempSongColor != null) {
-            music.songColor = tempSongColor;
-          }
-        }
-        music.artistImage = track.artists?.first.images?.first.url;
-        final yt = YoutubeExplode();
-        final video =
-            (await yt.search.search("$tempSongName ${music.artistName ?? ""}"))
-                .first;
-        final videoId = video.id.value;
-        music.duration = video.duration;
-        setState(() {});
-        var manifest = await yt.videos.streamsClient.getManifest(videoId);
-        var audioUrl = manifest.audioOnly.last.url;
-        player.play(UrlSource(audioUrl.toString()));
-      }
-    });
     super.initState();
+    _loadMusic();
   }
 
-  Future<Color?> getImagePalette(ImageProvider imageProvider) async {
-    final PaletteGenerator paletteGenerator =
-    await PaletteGenerator.fromImageProvider(imageProvider);
-    return paletteGenerator.dominantColor?.color;
+  _loadMusic() async {
+    try {
+      bool isTokenValid = await TokenManager.refreshAccessToken();
+
+      if (!isTokenValid) {
+        print("Failed to refresh token.");
+        return; // Menghentikan jika token tidak valid
+      }
+
+      MusicApi musicApi = MusicApi();
+      Music music = await musicApi.fetchMusic(widget.music.trackId);
+      final yt = YoutubeExplode();
+      final video = (await yt.search.search("${music.songName} ${music.artistName ?? ""}")).first;
+      final videoId = video.id.value;
+      if (videoId == null) {
+        throw Exception("Video ID not found");
+      }
+      widget.music.duration = video.duration;
+      setState(() {
+        widget.music.artistName = music.artistName;
+        widget.music.songName = music.songName;
+        widget.music.songImage = music.songImage;
+        widget.music.artistImage = music.artistImage;
+        widget.music.songColor = music.songColor;
+        widget.music.duration = music.duration;
+      });
+      var manifest = await yt.videos.streamsClient.getManifest(videoId);
+      var audioUrl = manifest.audioOnly.last.url;
+      player.play(UrlSource(audioUrl.toString()));
+    } catch (e) {
+      print("Error loading music: $e");
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      backgroundColor: music.songColor,
+      backgroundColor: widget.music.songColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 26),
@@ -98,14 +100,14 @@ class _MusicPlayerState extends State<MusicPlayer> {
                         children: [
                           CircleAvatar(
                             backgroundColor: Colors.white,
-                            backgroundImage: music.artistImage != null
-                                ? NetworkImage(music.artistImage!)
+                            backgroundImage: widget.music.artistImage != null
+                                ? NetworkImage(widget.music.artistImage!)
                                 : null,
                             radius: 10,
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            music.artistName ?? '-',
+                            widget.music.artistName ?? '-',
                             style: textTheme.bodyLarge
                                 ?.copyWith(color: Colors.white),
                           )
@@ -127,7 +129,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
               Expanded(
                   flex: 2,
                   child: Center(
-                    child: ArtWorkImage(image: music.songImage),
+                    child: ArtWorkImage(image: widget.music.songImage),
                   )),
               Expanded(
                   child: Column(
@@ -139,12 +141,12 @@ class _MusicPlayerState extends State<MusicPlayer> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                music.songName ?? '',
+                                widget.music.songName ?? '',
                                 style: textTheme.titleLarge
                                     ?.copyWith(color: Colors.white),
                               ),
                               Text(
-                                music.artistName ?? '-',
+                                widget.music.artistName ?? '-',
                                 style: textTheme.titleMedium
                                     ?.copyWith(color: Colors.white60),
                               ),
@@ -162,7 +164,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                           builder: (context, data) {
                             return ProgressBar(
                               progress: data.data ?? const Duration(seconds: 0),
-                              total: music.duration ?? const Duration(minutes: 4),
+                              total: widget.music.duration ?? const Duration(minutes: 4),
                               bufferedBarColor: Colors.white38,
                               baseBarColor: Colors.white10,
                               thumbColor: Colors.white,

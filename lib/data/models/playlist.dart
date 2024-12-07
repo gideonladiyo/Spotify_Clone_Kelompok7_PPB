@@ -1,19 +1,23 @@
 class PlaylistModel {
-  final String title;
-  final String count;
-  final String imageUrl;
+  final String id;
+  final String? title;
+  final String? count;
+  final String? imageUrl;
 
   PlaylistModel({
+    required this.id,
     required this.title,
     required this.count,
     required this.imageUrl,
   });
 
-  factory PlaylistModel.fromMap(Map<String, String> map) {
+  // Factory constructor untuk memetakan data dari JSON
+  factory PlaylistModel.fromMap(Map<String, dynamic> map) {
     return PlaylistModel(
-      title: map['title'] ?? '',
-      count: map['count'] ?? '',
-      imageUrl: map['image'] ?? '',
+      id: map['id'] ?? '',
+      title: map['name'] ?? '',
+      count: '${map['tracks']['total'] ?? 0} songs',  // Jumlah lagu
+      imageUrl: map['images'][0]['url'] ?? '',  // URL gambar
     );
   }
 }

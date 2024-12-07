@@ -20,7 +20,7 @@ class MusicTile extends StatelessWidget {
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child:
-            Image.network(imageUrl, width: 50, height: 50, fit: BoxFit.cover),
+            Image.network(imageUrl, width: 60, height: 60, fit: BoxFit.cover),
       ),
       title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(artist),

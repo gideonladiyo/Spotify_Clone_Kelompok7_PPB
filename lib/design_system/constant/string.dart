@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 class CustomStrings {
   static const String clientId = '55a7b8fce8fa495596b839a8577ce612';
   static const String clientSecret = '07d19074fb6943978b8435a69be4c9da';
+  static String accessToken = 'BQBS4JAw66sSNlou2UFPPVOLbUAE5N3Y5IrZ1SCb2HDGjJcFI1nNFnZWichkfIT_NRyW9cJ0byj5Xz0LsXa3gzLlvFWY_df1Ms1B9gdXvxcjsdNhEoUtxMHIOrZuMK3f80w2wueFvK9jPuTm1XRqsMRvCqxT_MCuTrxD6BRYNUBQgtUY5m3nIziwRKcGE57H9wnU6V_cbfOz8a18Srlh-1kfV2LohpISEulGutLiWK-WLZQfWO1w7GLnCooXC4ukjKcm9BVsgvy6KgESO35jF6JABSG-XFNY0PBq2z09cpaGiNf8FWdtbWUU-YaaQ6VgCwvJl_eV';
+  static String refreshToken = 'AQDm-lcn84dFd6mB5qlrhlNVfWOttN5Y_YEIetxT9oaZ5UNYFOt9sQ7S7hUASZKjwc8Gwlm6vRevlTAr7TdDIfnr1tT5POPmdzlK9Zd259paVVFKZluqbX9Zb2vnOapwuTA';
 }

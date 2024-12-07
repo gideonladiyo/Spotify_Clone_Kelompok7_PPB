@@ -4,7 +4,6 @@ import 'package:spotify_group7/design_system/styles/typograph_col.dart';
 
 class CustomSongCard extends StatelessWidget {
   final VoidCallback onPressed;
-  final int id_song;
   final String imagePath;
   final String title1;
   final String title2;
@@ -12,7 +11,6 @@ class CustomSongCard extends StatelessWidget {
   const CustomSongCard({
     super.key,
     required this.onPressed,
-    required this.id_song,
     required this.imagePath,
     required this.title1,
     required this.title2
@@ -29,16 +27,11 @@ class CustomSongCard extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Image.asset(
-                //   imagePath,
-                //   height: 150,
-                //   width: 150,
-                //   fit: BoxFit.cover,
-                // ),
-                Container(
+                Image.network(
+                  imagePath,
                   height: 150,
                   width: 150,
-                  color: Colors.white,
+                  fit: BoxFit.cover,
                 ),
                 const Positioned(
                   bottom: 8,
