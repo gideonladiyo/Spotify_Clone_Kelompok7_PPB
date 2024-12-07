@@ -49,25 +49,24 @@ class _ListAlbumHomeState extends State<ListAlbumHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Sesuaikan warna background
+      backgroundColor: Colors.black,
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Jumlah kolom per baris
+            crossAxisCount: 2,
             // crossAxisSpacing: PaddingCol.md, // Spasi antar kolom
             // mainAxisSpacing: PaddingCol.md, // Spasi antar baris
             childAspectRatio: 0.75, // Rasio aspek setiap item
           ),
-          itemCount: songs.length, // Jumlah kartu yang akan ditampilkan
+          itemCount: albums.length, // Jumlah kartu yang akan ditampilkan
           itemBuilder: (context, index) {
-            final song = songs[index];
+            Albums album = albums[index];
             return CustomSongCard(
               onPressed: () {},
-              id_song: song["id_song"],
-              imagePath: song["imagePath"],
-              title1: song["title1"],
-              title2: song["title2"],
+              imagePath: album.imageUrl,
+              title1: album.title,
+              title2: album.totalTracks,
             );
           },
         ),

@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Jumlah tab
+      length: 2,
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -85,63 +85,36 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: PaddingCol.md),
               SizedBox(
-                height: 250, // Tinggi tetap untuk ListView horizontal
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  children: [
-                    CustomSongCard(
+                height: 250, 
+                child: musicList.isEmpty ? const Center(child: CircularProgressIndicator(),)
+                : GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 3 / 4
+                  ), 
+                  itemCount: musicList.length,
+                  itemBuilder: (context, index) {
+                    Music music = musicList[index];
+                    return CustomSongCard(
                       onPressed: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    const MusicPlayer(
-                                      trackId: '2XVQdI3m0giGxNrwUhV3yP?si=31936b434d444ea1',
-                                    )));
-                      },
-                      id_song: 1,
-                      imagePath: "imagePath",
-                      title1: "Kamu",
-                      title2: "Coboy Junior",
-                    ),
-                    const SizedBox(width: 16),
-                    CustomSongCard(
-                      onPressed: (){},
-                      id_song: 2,
-                      imagePath: "imagePath",
-                      title1: "Title 2",
-                      title2: "Subtitle 2",
-                    ),
-                    const SizedBox(width: 16),
-                    CustomSongCard(
-                      onPressed: () {},
-                      id_song: 3,
-                      imagePath: "imagePath",
-                      title1: "Title 3",
-                      title2: "Subtitle 3",
-                    ),
-                    const SizedBox(width: 16),
-                    CustomSongCard(
-                      onPressed: () {},
-                      id_song: 4,
-                      imagePath: "imagePath",
-                      title1: "Title 4",
-                      title2: "Subtitle 4",
-                    ),
-                    const SizedBox(width: 16),
-                    CustomSongCard(
-                      onPressed: () {},
-                      id_song: 5,
-                      imagePath: "imagePath",
-                      title1: "Title 5",
-                      title2: "Subtitle 5",
-                    ),
-                  ],
-                ),
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => MusicPlayer(music: music)
+                          )
+                        );
+                      }, 
+                      imagePath: music.songImage ?? "default_song_url", 
+                      title1: music.songName ?? "Name not Found", 
+                      title2: music.artistName ?? "Artist name not found"
+                    );
+                  }
+                )
               ),
               SizedBox(height: PaddingCol.xxxl),
-              // TabBar di bawah ListView
+              
               TabBar(
                 indicatorColor: Colors.white,
                 labelColor: Colors.white,
@@ -161,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               SizedBox(
-                height: 500, // Tinggi tetap untuk TabBarView
+                height: 500,
                 child: TabBarView(
                   children: [
                     ListArtistHome(),

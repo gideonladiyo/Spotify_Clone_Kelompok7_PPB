@@ -16,7 +16,6 @@ class Home extends StatelessWidget {
       child: BottomNavbar(
           home: HomePage(),
           playlist: Playlist(),
-          histoy: Artis(),
           profile: Profile()),
     );
   }
