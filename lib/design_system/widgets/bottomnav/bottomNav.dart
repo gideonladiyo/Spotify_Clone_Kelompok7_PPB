@@ -4,14 +4,18 @@ import 'package:spotify_group7/design_system/widgets/song_card/custom_song_card.
 
 class BottomNavbar extends StatefulWidget {
   final Widget home;
+  final Widget search;
   final Widget playlist;
   final Widget profile;
 
-  const BottomNavbar(
-      {super.key,
-      required this.home,
-      required this.playlist,
-      required this.profile});
+  const BottomNavbar({
+    super.key,
+    required this.home,
+    required this.search,
+    required this.playlist,
+    required this.profile
+  }
+  );
 
   @override
   State<BottomNavbar> createState() => _BottomNavbarState();
@@ -23,7 +27,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   List<Widget> get widgetOptions =>
-      [widget.home, widget.playlist, widget.profile];
+      [widget.home, widget.search, widget.playlist, widget.profile];
 
   void onTapped(int index) {
     setState(() {
@@ -49,6 +53,10 @@ class _BottomNavbarState extends State<BottomNavbar> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
                 icon: Icon(Icons.home, size: 32), label: "Home"),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search, size: 32,),
+              label: "Search"
+            ),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.playlist_add_check,
