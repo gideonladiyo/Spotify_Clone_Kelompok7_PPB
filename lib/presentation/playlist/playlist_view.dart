@@ -51,9 +51,9 @@ class PlaylistDetail extends StatelessWidget {
                           builder: (BuildContext builder) {
                             print("Navigating to MusicPlayer with: music=${music.trackId}, playlist=${playlist?.id}, idx=$index");
                             return MusicPlayer(
-                              music: music,
-                              playlist: playlist,
-                              idx: index,
+                                music: music,
+                                playlist: playlist,
+                                idx: index
                             );
                           }
                         ),
@@ -67,9 +67,9 @@ class PlaylistDetail extends StatelessWidget {
                               builder: (BuildContext builder) {
                                 print("Navigating to MusicPlayer with: music=${music.trackId}, playlist=${playlist?.id}, idx=$index");
                                 return MusicPlayer(
-                                  music: music,
-                                  playlist: playlist,
-                                  idx: index,
+                                    music: music,
+                                    playlist: playlist,
+                                    idx: index
                                 );
                               }
                           ),

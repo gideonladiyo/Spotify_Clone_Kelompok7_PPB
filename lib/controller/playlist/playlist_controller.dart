@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:spotify_group7/controller/home/home_controller.dart';
+import 'package:spotify_group7/data/models/music.dart';
 import 'package:spotify_group7/data/models/playlist.dart';
 import 'package:spotify_group7/presentation/playlist/playlist.dart';
 
@@ -8,6 +10,7 @@ import '../../design_system/constant/list_item.dart';
 
 class PlaylistController extends GetxController {
   var playlists = <PlaylistModel>[].obs;
+  HomeController homeController = Get.put(HomeController());
 
   @override
   void onInit(){
@@ -26,8 +29,7 @@ class PlaylistController extends GetxController {
           continue;
         }
 
-        PlaylistModel playlistData = await PlaylistApi.fetchPlaylist(playlistId);
-
+        PlaylistModel playlistData = await PlaylistApi.fetchPlaylist(playlistId); 
         loadedPlaylists.add(playlistData);
       } catch (e) {
         print('Error loading playlist $playlistId: $e');

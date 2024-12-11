@@ -1,61 +1,56 @@
-// import 'package:get/get.dart';
-// import 'package:spotify_group7/data/models/music.dart';
-// import 'package:audioplayers/audioplayers.dart';
-// import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-// import '../../data/functions/api.dart';
-// import '../../data/functions/token_manager.dart';
-//
-// class MusicPlayerController extends GetxController{
-//   final player = AudioPlayer();
-//   Rx<Music> currentMusic = Music(trackId: '').obs;
-//   Rx<Duration> currentPosition = Duration.zero.obs;
-//   Rx<Duration> totalDuration = Duration(minutes: 4).obs;
-//   RxBool isPlaying = false.obs;
-//
-//   @override
-//   void onInit(){
-//     super.onInit();
-//     listenToPlayer();
-//   }
-//
-//   void listenToPlayer() {
-//     player.onDurationChanged.listen((position) {
-//       print("Current position $position");
-//       currentPosition.value = position;
-//     });
-//     player.onPlayerStateChanged.listen((state) {
-//       isPlaying.value = state == PlayerState.playing;
-//     });
-//   }
-//
-//   Future<void> playMusic(Music music) async{
-//     try {
-//       bool isTokenValid = await TokenManager.refreshAccessToken();
-//       if (!isTokenValid) throw Exception("Token refresh failed.");
-//
-//       MusicApi musicApi = MusicApi();
-//       Music updatedMusic = await musicApi.fetchMusic(music.trackId);
-//       currentMusic.value = updatedMusic;
-//
-//       final yt = YoutubeExplode();
-//       final video = (await yt.search.search("${music.songName} ${music.artistName ?? ''}")).first;
-//       final manifest = await yt.videos.streamsClient.getManifest(video.id.value);
-//       final audioUrl = manifest.audioOnly.last.url;
-//
-//       totalDuration.value = updatedMusic.duration ?? Duration(minutes: 4);
-//       await player.play(UrlSource(audioUrl.toString()));
-//     } catch (e) {
-//       print("Error loading music: $e");
-//     }
-//   }
-//
-//   void pauseMusic() => player.pause();
-//   void resumeMusic() => player.resume();
-//   void seekTo(Duration position) => player.seek(position);
-//
-//   @override
-//   void onClose(){
-//     player.dispose();
-//     super.onClose();
-//   }
-// }
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import '../../data/functions/api.dart';
+import '../../data/functions/token_manager.dart';
+import '../../data/models/music.dart';
+import '../../data/models/playlist.dart';
+import 'package:get/get.dart';
+
+class MusicPlayerController extends GetxController {
+  AudioPlayer player = AudioPlayer();
+  var idx = 0.obs;
+  var playlist = Rx<PlaylistModel?>(null);
+  var music = Rx<Music?>(null);
+
+  void setVar(PlaylistModel? playlistInput, Music musicInput, int currentIdx){
+    playlist.value = playlistInput;
+    music.value = musicInput;
+    idx.value = currentIdx;
+  }
+
+  void prevNextMusic(int newIndex) {
+    idx.value = newIndex;
+    music.value = playlist.value!.musics?[idx.value];
+    player.play(UrlSource(music.value!.audioUrl!));
+    loadPlayer(music.value!);
+  }
+
+  void snackBar() {
+    Get.snackbar("Oops!", "Can't skip/back to track!");
+  }
+
+  void pauseMusic() {
+    player.pause();
+  }
+
+  void resumeMusic() {
+    player.resume();
+  }
+
+  void onInit() {
+    super.onInit();
+  }
+
+  void loadPlayer(Music music) async{
+    final yt = YoutubeExplode();
+    final video =
+        (await yt.search.search("${music.songName} ${music.artistName ?? ""}"))
+            .first;
+    final videoId = video.id.value;
+    music.duration = video.duration;
+    var manifest = await yt.videos.streamsClient.getManifest(videoId);
+    music.audioUrl = (manifest.audioOnly.last.url.toString());
+    player.play(UrlSource(music.audioUrl ?? ""));
+  }
+}

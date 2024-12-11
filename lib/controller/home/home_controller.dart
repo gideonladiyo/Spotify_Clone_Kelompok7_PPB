@@ -4,9 +4,13 @@ import 'package:spotify_group7/data/functions/token_manager.dart';
 import 'package:spotify_group7/data/models/album.dart';
 import 'package:spotify_group7/data/models/artists.dart';
 import 'package:spotify_group7/data/models/music.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:spotify_group7/design_system/constant/list_item.dart';
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class HomeController extends GetxController {
+  AudioPlayer player = AudioPlayer();
   var musicList = <Music>[].obs;
   var albums = <Albums>[].obs;
   var artists = <Artists>[].obs;
@@ -28,7 +32,7 @@ class HomeController extends GetxController {
           continue;
         }
 
-        Music musicData = await MusicApi().fetchMusic(musicId);
+        Music musicData = await MusicApi().fetchMusic(musicId);;
         loadedMusic.add(musicData);
       } catch (e) {
         print("Error load ${e}");

@@ -45,7 +45,7 @@ class PlaylistApi {
       headers: {
         'Authorization': _authToken,
       },
-    ).timeout(Duration(seconds: 30));
+    );
 
     if (response.statusCode == 200) {
       Map<String, dynamic> responseMap = jsonDecode(response.body);
@@ -74,7 +74,7 @@ class MusicApi {
       headers: {
         'Authorization': _authToken,
       },
-    ).timeout(Duration(seconds: 30));
+    );
 
     if (response.statusCode == 200) {
       Map<String, dynamic> responseMap = jsonDecode(response.body);
@@ -106,7 +106,7 @@ class ArtistApi {
       headers: {
         'Authorization': _authToken,
       },
-    ).timeout(Duration(seconds: 30));
+    );
 
     if (response.statusCode == 200) {
       Map<String, dynamic> responseMap = jsonDecode(response.body);
@@ -129,7 +129,7 @@ class AlbumApi {
       headers: {
         'Authorization': _authToken,
       },
-    ).timeout(Duration(seconds: 30));
+    );
 
     if (response.statusCode == 200) {
       Map<String, dynamic> responseMap = jsonDecode(response.body);
@@ -142,6 +142,49 @@ class AlbumApi {
       return album;
     } else {
       throw Exception('Failed to load playlist');
+    }
+  }
+}
+
+class SearchApi {
+  static const String _baseUrl = 'https://api.spotify.com/v1/search';
+
+  static String _authToken = 'Bearer ${CustomStrings.accessToken}';
+
+  Future<List<Music>> searchTracks(String query) async{
+    String encodedQuery = Uri.encodeComponent(query);
+    String url = '$_baseUrl?q=$encodedQuery&type=track&limit=10';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': _authToken,
+      },
+    );
+    print("url: $url");
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseMap = jsonDecode(response.body);
+      List<Music> tracks = [];
+      for (var item in responseMap['tracks']['items']) {
+        print("Item: ");
+        // print(item['artist']);
+        print(item['id']);
+        print(item['name']);
+        print(item['artists'][0]['name']);
+        print(item['album']['images'][0]['url']);
+        Music music = Music.fromMap(item);
+        print("Music:");
+        print(music.trackId);
+        print(music.songName);
+        print(music.artistName);
+        print(music.songImage);
+        tracks.add(music);
+      }
+      return tracks;
+    } else {
+      print('failed load music');
+      throw Exception('Failed to search tracks');
     }
   }
 }

@@ -1,28 +1,20 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:palette_generator/palette_generator.dart';
-import 'package:spotify/spotify.dart';
 import 'package:spotify_group7/data/models/music.dart';
 import 'package:spotify_group7/data/models/playlist.dart';
-import 'package:spotify_group7/design_system/constant/string.dart';
 import 'package:spotify_group7/design_system/styles/app_colors.dart';
 import 'package:spotify_group7/design_system/widgets/art_work_image.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-
 import '../../data/functions/api.dart';
 import '../../data/functions/token_manager.dart';
 
+// ignore: must_be_immutable
 class MusicPlayer extends StatefulWidget {
   final Music music;
   PlaylistModel? playlist;
   int? idx;
-  MusicPlayer({
-    super.key,
-    required this.music,
-    this.playlist,
-    this.idx
-  });
+  MusicPlayer({super.key, required this.music, this.playlist, this.idx});
 
   @override
   State<MusicPlayer> createState() => _MusicPlayerState();
@@ -40,7 +32,8 @@ class _MusicPlayerState extends State<MusicPlayer> {
   @override
   void initState() {
     super.initState();
-    print("MusicPlayer initialized with: music=${widget.music.trackId}, playlist=${widget.playlist?.id}, idx=${widget.idx}");
+    print(
+        "MusicPlayer initialized with: music=${widget.music.trackId}, playlist=${widget.playlist?.id}, idx=${widget.idx}");
     _loadMusic();
   }
 
@@ -54,14 +47,17 @@ class _MusicPlayerState extends State<MusicPlayer> {
       }
       MusicApi musicApi = MusicApi();
       Music musicData;
-      if (widget.playlist != null && widget.idx != null){
-        musicData = await musicApi.fetchMusic(widget.playlist!.musics![widget.idx!].trackId);
+      if (widget.playlist != null && widget.idx != null) {
+        musicData = await musicApi
+            .fetchMusic(widget.playlist!.musics![widget.idx!].trackId);
       } else {
         musicData = await musicApi.fetchMusic(widget.music.trackId);
       }
       Music music = musicData;
       final yt = YoutubeExplode();
-      final video = (await yt.search.search("${music.songName} ${music.artistName ?? ""}")).first;
+      final video = (await yt.search
+              .search("${music.songName} ${music.artistName ?? ""}"))
+          .first;
       final videoId = video.id.value;
       music.duration = video.duration;
       widget.music.duration = video.duration;
@@ -82,7 +78,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
   }
 
   void _prevNextMusic(int newIndex) {
-    if (widget.playlist != null){
+    if (widget.playlist != null) {
       setState(() {
         widget.idx = newIndex;
         _loadMusic();
@@ -146,6 +142,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   ),
                   IconButton(
                     onPressed: () {
+                      player.pause();
                       Navigator.pop(context);
                     },
                     icon: const Icon(
@@ -162,110 +159,113 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   )),
               Expanded(
                   child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.music.songName ?? '',
-                                style: textTheme.titleLarge
-                                    ?.copyWith(color: Colors.white),
-                              ),
-                              Text(
-                                widget.music.artistName ?? '-',
-                                style: textTheme.titleMedium
-                                    ?.copyWith(color: Colors.white60),
-                              ),
-                            ],
+                          Text(
+                            widget.music.songName ?? '',
+                            style: textTheme.titleLarge
+                                ?.copyWith(color: Colors.white),
                           ),
-                          const Icon(
-                            Icons.favorite,
-                            color: AppColors.primaryColor,
-                          )
+                          Text(
+                            widget.music.artistName ?? '-',
+                            style: textTheme.titleMedium
+                                ?.copyWith(color: Colors.white60),
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      StreamBuilder(
-                          stream: player.onPositionChanged,
-                          builder: (context, data) {
-                            return ProgressBar(
-                              progress: data.data ?? const Duration(seconds: 0),
-                              total: widget.music.duration ?? const Duration(minutes: 4),
-                              bufferedBarColor: Colors.white38,
-                              baseBarColor: Colors.white10,
-                              thumbColor: Colors.white,
-                              timeLabelTextStyle:
-                              const TextStyle(color: Colors.white),
-                              progressBarColor: Colors.white,
-                              onSeek: (duration) {
-                                player.seek(duration);
-                              },
-                            );
-                          }),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.lyrics_outlined,
-                                  color: Colors.white)),
-                          IconButton(
-                              onPressed: () async {
-                                if (widget.playlist != null && widget.idx != null){
-                                  await player.pause();
-                                  _prevNextMusic(widget.idx! - 1);
-                                } else {
-                                  _showSnackbar();
-                                }
-                              },
-                              icon: const Icon(Icons.skip_previous,
-                                  color: Colors.white, size: 36)),
-                          IconButton(
-                              onPressed: () async {
-                                if (player.state == PlayerState.playing) {
-                                  await player.pause();
-                                  if (widget.playlist != null && widget.idx != null) {
-                                    print("music id from playlist ${widget.playlist!.musics?[widget.idx!].trackId}");
-                                    print("music id actual ${widget.music.trackId}");
-                                  } else {
-                                    print("tidak muncul");
-                                  }
-                                } else {
-                                  await player.resume();
-                                }
-                                setState(() {});
-                              },
-                              icon: Icon(
-                                player.state == PlayerState.playing
-                                    ? Icons.pause
-                                    : Icons.play_circle,
-                                color: Colors.white,
-                                size: 60,
-                              )
-                          ),
-                          IconButton(
-                              onPressed: ()  async{
-                                if (widget.playlist != null && widget.idx != null){
-                                  await player.pause();
-                                  _prevNextMusic(widget.idx! + 1);
-                                } else {
-                                  _showSnackbar();
-                                }
-                              },
-                              icon: const Icon(Icons.skip_next,
-                                  color: Colors.white, size: 36)),
-                          IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.loop,
-                                  color: AppColors.primaryColor)),
-                        ],
+                      const Icon(
+                        Icons.favorite,
+                        color: AppColors.primaryColor,
                       )
                     ],
-                  ))
+                  ),
+                  const SizedBox(height: 16),
+                  StreamBuilder(
+                      stream: player.onPositionChanged,
+                      builder: (context, data) {
+                        return ProgressBar(
+                          progress: data.data ?? const Duration(seconds: 0),
+                          total: widget.music.duration ??
+                              const Duration(minutes: 4),
+                          bufferedBarColor: Colors.white38,
+                          baseBarColor: Colors.white10,
+                          thumbColor: Colors.white,
+                          timeLabelTextStyle:
+                              const TextStyle(color: Colors.white),
+                          progressBarColor: Colors.white,
+                          onSeek: (duration) {
+                            player.seek(duration);
+                          },
+                        );
+                      }),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.lyrics_outlined,
+                              color: Colors.white)),
+                      IconButton(
+                          onPressed: () async {
+                            if (widget.playlist != null && widget.idx != null) {
+                              await player.pause();
+                              _prevNextMusic(widget.idx! - 1);
+                            } else {
+                              _showSnackbar();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_previous,
+                              color: Colors.white, size: 36)),
+                      IconButton(
+                          onPressed: () async {
+                            if (player.state == PlayerState.playing) {
+                              await player.pause();
+                              if (widget.playlist != null &&
+                                  widget.idx != null) {
+                                print(
+                                    "music id from playlist ${widget.playlist!.musics?[widget.idx!].trackId}");
+                                print(
+                                    "music id actual ${widget.music.trackId}");
+                              } else {
+                                print("tidak muncul");
+                              }
+                            } else {
+                              await player.resume();
+                            }
+                            setState(() {});
+                          },
+                          icon: Icon(
+                            player.state == PlayerState.playing
+                                ? Icons.pause
+                                : Icons.play_circle,
+                            color: Colors.white,
+                            size: 60,
+                          )),
+                      IconButton(
+                          onPressed: () async {
+                            if (widget.playlist != null && widget.idx != null) {
+                              await player.pause();
+                              _prevNextMusic(widget.idx! + 1);
+                            } else {
+                              _showSnackbar();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_next,
+                              color: Colors.white, size: 36)),
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.loop,
+                              color: AppColors.primaryColor)),
+                    ],
+                  )
+                ],
+              ))
             ],
           ),
         ),
