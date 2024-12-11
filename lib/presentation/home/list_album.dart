@@ -1,50 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_group7/data/functions/api.dart';
-import 'package:spotify_group7/design_system/styles/padding_col.dart';
+import 'package:spotify_group7/controller/home/home_controller.dart';
 import 'package:spotify_group7/design_system/widgets/song_card/custom_song_card.dart';
-import '../../data/functions/token_manager.dart';
-import '../../design_system/constant/list_item.dart';
-
 import '../../data/models/album.dart';
-import '../../design_system/widgets/song_card/playlist_item.dart';
-import '../album/album.dart';
+import 'package:get/get.dart';
 
-class ListAlbumHome extends StatefulWidget {
-  @override
-  State<ListAlbumHome> createState() => _ListAlbumHomeState();
-}
-
-class _ListAlbumHomeState extends State<ListAlbumHome> {
-  List<Albums> albums = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadAlbums();
-  }
-
-  _loadAlbums() async {
-    List<Albums> loadedAlbums = [];
-    for (String albumId in listIdAlbum) {
-      try {
-        bool isTokenValid = await TokenManager.refreshAccessToken();
-
-        if (!isTokenValid) {
-          print("Failed to refresh access token. Skip album id $albumId");
-          continue;
-        }
-
-        Albums albumData = await AlbumApi().fetchAlbum(albumId);
-        loadedAlbums.add(albumData);
-      } catch (e) {
-        print('Error loading album $albumId: $e');
-      }
-    }
-
-    setState(() {
-      albums = loadedAlbums;
-    });
-  }
+class ListAlbumHome extends StatelessWidget {
+  ListAlbumHome({super.key});
+  HomeController controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -52,25 +14,24 @@ class _ListAlbumHomeState extends State<ListAlbumHome> {
       backgroundColor: Colors.black,
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: albums.isEmpty ? const Center(child: CircularProgressIndicator(),)
+        child: Obx(() {
+          return controller.albums.isEmpty ? const Center(child: CircularProgressIndicator(),)
         : GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            // crossAxisSpacing: PaddingCol.md, // Spasi antar kolom
-            // mainAxisSpacing: PaddingCol.md, // Spasi antar baris
-            childAspectRatio: 0.75, // Rasio aspek setiap item
-          ),
-          itemCount: albums.length, // Jumlah kartu yang akan ditampilkan
-          itemBuilder: (context, index) {
-            Albums album = albums[index];
-            return CustomSongCard(
-              onPressed: () {},
-              imagePath: album.imageUrl,
-              title1: album.title,
-              title2: album.totalTracks,
-            );
-          },
-        ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.75,
+            ),
+            itemCount: controller.albums.length,
+            itemBuilder: (context, index) {
+              Albums album = controller.albums[index];
+              return CustomSongCard(
+                onPressed: () {},
+                imagePath: album.imageUrl,
+                title1: album.title,
+                title2: album.totalTracks,
+              );
+              },);
+        })
       ),
     );
   }
