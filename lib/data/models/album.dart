@@ -20,7 +20,7 @@ class Albums {
         id: map['id'],
         title: map['name'],
         artist: map['artists'][0]['name'],
-        totalTracks: "${map['tracks']['total']} Songs",
+        totalTracks: "${map['total_tracks']} Songs",
         imageUrl: map['images'][0]['url']
     );
   }

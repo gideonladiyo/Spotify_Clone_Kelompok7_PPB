@@ -16,6 +16,7 @@ class PlaylistApi {
   static String _authToken = 'Bearer ${CustomStrings.accessToken}';
 
   static Future<PlaylistModel> fetchPlaylist(String playlistId) async {
+    print(playlistId);
     final response = await http.get(
       Uri.parse('$_baseUrl$playlistId'),
       headers: {
@@ -167,24 +168,111 @@ class SearchApi {
       Map<String, dynamic> responseMap = jsonDecode(response.body);
       List<Music> tracks = [];
       for (var item in responseMap['tracks']['items']) {
-        print("Item: ");
-        // print(item['artist']);
-        print(item['id']);
-        print(item['name']);
-        print(item['artists'][0]['name']);
-        print(item['album']['images'][0]['url']);
+        if (item == null) {
+          continue;
+        }
         Music music = Music.fromMap(item);
-        print("Music:");
-        print(music.trackId);
-        print(music.songName);
-        print(music.artistName);
-        print(music.songImage);
         tracks.add(music);
       }
       return tracks;
     } else {
       print('failed load music');
       throw Exception('Failed to search tracks');
+    }
+  }
+
+  Future<List<PlaylistModel>> searchPlaylist(String query) async {
+    String encodedQuery = Uri.encodeComponent(query);
+    String url = '$_baseUrl?q=$encodedQuery&type=playlist&limit=10';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': _authToken,
+      },
+    );
+    print("url: $url");
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseMap = jsonDecode(response.body);
+      List<PlaylistModel> playlists = [];
+
+      for (var item in responseMap['playlists']['items']) {
+        if (item == null) {
+          continue;
+        }
+        try {
+          PlaylistModel playlistData = await PlaylistApi.fetchPlaylist(item['id']);
+          playlists.add(playlistData);
+        } catch (e) {
+          print("Skipped playlist with ID ${item['id']} due to error: $e");
+          continue;
+        }
+      }
+
+      return playlists;
+    } else {
+      print('failed load playlist');
+      throw Exception('Failed to search playlist');
+    }
+  }
+
+
+  Future<List<Artists>> searchArtist(String query) async {
+    String encodedQuery = Uri.encodeComponent(query);
+    String url = '$_baseUrl?q=$encodedQuery&type=artist&limit=10';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': _authToken,
+      },
+    );
+    print("url: $url");
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseMap = jsonDecode(response.body);
+      List<Artists> artists = [];
+      for (var item in responseMap['artists']['items']) {
+        if (item == null) {
+          continue;
+        }
+        Artists artistData = Artists.fromMap(item);
+        artists.add(artistData);
+      }
+      return artists;
+    } else {
+      print('failed load playlist');
+      throw Exception('Failed to search artist');
+    }
+  }
+
+  Future<List<Albums>> searchAlbum(String query) async {
+    String encodedQuery = Uri.encodeComponent(query);
+    String url = '$_baseUrl?q=$encodedQuery&type=album&limit=10';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': _authToken,
+      },
+    );
+    print("url: $url");
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseMap = jsonDecode(response.body);
+      List<Albums> albums = [];
+      for (var item in responseMap['albums']['items']) {
+        if (item == null) {
+          continue;
+        }
+        Albums albumData = Albums.fromMap(item);
+        albums.add(albumData);
+      }
+      return albums;
+    } else {
+      print('failed load playlist');
+      throw Exception('Failed to search album');
     }
   }
 }

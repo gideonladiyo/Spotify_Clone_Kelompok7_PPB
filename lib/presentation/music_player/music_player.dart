@@ -1,6 +1,7 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:spotify_group7/data/functions/text_controller.dart';
 import 'package:spotify_group7/data/models/music.dart';
 import 'package:spotify_group7/data/models/playlist.dart';
 import 'package:spotify_group7/design_system/styles/app_colors.dart';
@@ -167,7 +168,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.music.songName ?? '',
+                            truncateTitle(widget.music.songName ?? '', 24),
                             style: textTheme.titleLarge
                                 ?.copyWith(color: Colors.white),
                           ),
