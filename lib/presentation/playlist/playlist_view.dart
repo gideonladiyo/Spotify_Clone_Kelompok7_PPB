@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_group7/controller/playlist/playlist_detail_controller.dart';
+import 'package:spotify_group7/design_system/styles/image_col.dart';
 import 'package:spotify_group7/design_system/widgets/song_card/song_with_artis.dart';
 import 'package:spotify_group7/presentation/music_player/music_player.dart';
 import '../../data/models/music.dart';
@@ -24,7 +25,9 @@ class PlaylistDetail extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(playlist.imageUrl ?? "default_image_url"),
+            playlist.imageUrl == ''
+            ? Image.asset(AppImages.logo_lagu)
+            : Image.network(playlist.imageUrl ?? "default_image_url"),
             const SizedBox(height: 16.0),
             Text(
               playlist.title ?? "No title",
