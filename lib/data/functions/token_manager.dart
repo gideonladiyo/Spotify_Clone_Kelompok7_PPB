@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 class TokenManager {
   static const String tokenEndpoint = 'https://accounts.spotify.com/api/token';
 
-  /// Function to refresh the access token
   static Future<bool> refreshAccessToken() async {
     try {
       final response = await http.post(

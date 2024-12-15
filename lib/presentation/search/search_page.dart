@@ -15,6 +15,8 @@ import 'package:spotify_group7/design_system/widgets/song_card/song_with_artis.d
 import 'package:spotify_group7/presentation/music_player/music_player.dart';
 import 'package:spotify_group7/presentation/playlist/playlist_view.dart';
 
+import '../artis/artist.dart';
+
 class SearchPage extends StatelessWidget {
   SearchPage({super.key});
   final SearchPageController controller = Get.put(SearchPageController());
@@ -166,7 +168,20 @@ class SearchPage extends StatelessWidget {
                     itemCount: controller.artistResult.length,
                     itemBuilder: (context, index) {
                       Artists artist = controller.artistResult[index];
-                      return ArtistTile(artist: artist);
+                      return ArtistTile(
+                        artistViewDirections: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext builder) {
+                                  print("Navigating to Artist page with: id=${artist.id}");
+                                  return ArtistView(artist: artist);
+                                }
+                            ),
+                          );
+                        },
+                          artist: artist
+                      );
                     },
                   );
                 } else if (selectedCategory == 'Playlist') {

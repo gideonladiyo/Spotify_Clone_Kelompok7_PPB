@@ -18,13 +18,23 @@ class PlaylistModel {
   });
 
   factory PlaylistModel.fromMap(Map<String, dynamic> map) {
+    final ownerId = map['owner'] != null ? map['owner']['id'] : '';
+    final tracks = map['tracks'] != null ? map['tracks'] : {};
+    final totalTracks = tracks['total'] ?? 0;
+
     return PlaylistModel(
-        id: map['id'] ?? '',
-        authorId: map['owner']['id'],
-        title: map['name'] ?? '',
-        count: '${map['tracks']['total'] ?? 0} songs',
-        imageUrl: map['images'] != null && map['images'].isNotEmpty ? map['images'][0]['url'] : '',
-        musics: map['tracks'] == null || map['tracks']['items'].isEmpty ? null : List<Music>.from(map['tracks']['items'].map((item) => Music.fromMap(item['track'])))
+      id: map['id'] ?? '',
+      authorId: ownerId,
+      title: map['name'] ?? '',
+      count: '$totalTracks songs',
+      imageUrl: map['images'] != null && map['images'].isNotEmpty
+          ? map['images'][0]['url']
+          : '',
+      musics: tracks['items'] != null
+          ? List<Music>.from(tracks['items']
+              .where((item) => item != null && item['track'] != null)
+              .map((item) => Music.fromMap(item['track'])))
+          : null,
     );
   }
 }

@@ -29,6 +29,8 @@ class PlaylistDetail extends StatelessWidget {
             ? Image.asset(AppImages.logo_lagu)
             : Image.network(playlist.imageUrl ?? "default_image_url"),
             const SizedBox(height: 16.0),
+            Text("Playlist"),
+            SizedBox(height: 8,),
             Text(
               playlist.title ?? "No title",
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),

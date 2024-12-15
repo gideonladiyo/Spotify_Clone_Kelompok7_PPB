@@ -32,7 +32,8 @@ class PlaylistApi {
         print("Total tracks: $totalTracks");
 
         List<Music> musics = [];
-        if (totalTracks > 0 && responseMap['tracks']['items'] is List<dynamic>) {
+        if (totalTracks > 0 &&
+            responseMap['tracks']['items'] is List<dynamic>) {
           for (var track in responseMap['tracks']['items']) {
             if (track != null && track['track'] != null) {
               Music musicData = Music.fromMap(track['track']);
@@ -40,9 +41,21 @@ class PlaylistApi {
             }
           }
         }
-
+        print(responseMap['id']);
+        print(responseMap['owner']['id']);
+        print(responseMap['tracks']['total']);
+        if (responseMap['images'] != null) {
+          print("'${responseMap['images'][0]['url']}'");
+        }
+        if (responseMap['tracks'] == null || responseMap['tracks']['items'].isEmpty) {
+          print('null');
+        } else {
+          print("ada");
+        }
         PlaylistModel playlist = PlaylistModel.fromMap(responseMap);
-        playlist.musics = totalTracks > 0 ? musics : null; // Set musics to null if tracks are empty
+        playlist.musics = totalTracks > 0
+            ? musics
+            : null;
         return playlist;
       } else {
         throw Exception('Invalid tracks data format');
@@ -129,6 +142,48 @@ class ArtistApi {
       throw Exception('Failed to load playlist');
     }
   }
+
+  Future<List<Music>> fetchArtistTracks(String artistId) async{
+    final response = await http.get(
+      Uri.parse('https://api.spotify.com/v1/artists/$artistId/top-tracks'),
+      headers: {
+        'Authorization': _authToken,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseMap = jsonDecode(response.body);
+      List<Music> loadedMusic = [];
+      for (var item in responseMap['tracks']){
+        Music musicData = Music.fromMap(item);
+        loadedMusic.add(musicData);
+      }
+      return loadedMusic;
+    } else {
+      throw Exception('Failed to load playlist');
+    }
+  }
+
+  Future<List<Albums>> fetchArtistAlbums(String artistId) async{
+    final response = await http.get(
+      Uri.parse('https://api.spotify.com/v1/artists/$artistId/albums'),
+      headers: {
+        'Authorization': _authToken,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseMap = jsonDecode(response.body);
+      List<Albums> loadedAlbum = [];
+      for (var item in responseMap['items']){
+        Albums albumData = Albums.fromMap(item);
+        loadedAlbum.add(albumData);
+      }
+      return loadedAlbum;
+    } else {
+      throw Exception('Failed to load playlist');
+    }
+  }
 }
 
 class AlbumApi {
@@ -152,6 +207,9 @@ class AlbumApi {
       print("Artist album: ${album.artist}");
       print("Image album: ${album.imageUrl}");
       print("Total album: ${album.totalTracks}");
+      if (album.musics == []){
+        print("music album null");
+      }
       return album;
     } else {
       throw Exception('Failed to load playlist');
@@ -404,6 +462,62 @@ class UserApi {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<List<Music>> getTopTracks() async{
+    String url = 'https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=5';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': _authToken,
+      },
+    );
+    print("url: $url");
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseMap = jsonDecode(response.body);
+      List<Music> tracks = [];
+      for (var item in responseMap['items']) {
+        if (item == null) {
+          continue;
+        }
+        Music music = Music.fromMap(item);
+        tracks.add(music);
+      }
+      return tracks;
+    } else {
+      print('failed load music');
+      throw Exception('Failed to search tracks');
+    }
+  }
+
+  Future<List<Artists>> getTopArtists() async{
+    String url = 'https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=5';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': _authToken,
+      },
+    );
+    print("url: $url");
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseMap = jsonDecode(response.body);
+      List<Artists> artists = [];
+      for (var item in responseMap['items']) {
+        if (item == null) {
+          continue;
+        }
+        Artists artist = Artists.fromMap(item);
+        artists.add(artist);
+      }
+      return artists;
+    } else {
+      print('failed load music');
+      throw Exception('Failed to search tracks');
     }
   }
 }

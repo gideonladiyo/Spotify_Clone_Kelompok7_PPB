@@ -28,20 +28,17 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> createPlaylist(String userId, String name, String desc, bool isPublic) async{
+  Future<void> createPlaylist(
+      String userId, String name, String desc, bool isPublic) async {
     bool isTokenValid = await TokenManager.refreshAccessToken();
 
     if (!isTokenValid) {
       return;
     }
     try {
-      print(userId);
-      print(name);
-      print(desc);
-      print(isPublic);
       await UserApi().createPlaylist(userId, name, desc, isPublic);
-      await getUserPlaylist();
-      showSnackbar('Success Create Playlist!', 'You have created playlist "$name"');
+      showSnackbar(
+          'Success Create Playlist!', 'You have created playlist "$name"');
     } catch (e) {
       print(e);
     }
@@ -69,32 +66,28 @@ class UserController extends GetxController {
         musics: userSavedTrack,
       );
       userPlaylist.add(likedTrackPlaylist);
-      print(likedTrackPlaylist.id);
-      print(likedTrackPlaylist.title);
-      print(likedTrackPlaylist.count);
-      print(likedTrackPlaylist.imageUrl);
     } catch (e) {
       print('Error creating liked song playlist: $e');
     }
   }
 
-    Future<void> getUserPlaylist() async {
-      bool isTokenValid = await TokenManager.refreshAccessToken();
+  Future<void> getUserPlaylist() async {
+    bool isTokenValid = await TokenManager.refreshAccessToken();
 
-      if (!isTokenValid) {
-        return;
-      }
-
-      try {
-        List<String> playlistsId = await UserApi().getUserPlaylist();
-        for (var playlistItem in playlistsId){
-          PlaylistModel playlist = await PlaylistApi.fetchPlaylist(playlistItem);
-          userPlaylist.add(playlist);
-        }
-      } catch (error) {
-        print('Error fetching user playlists: $error');
-      }
+    if (!isTokenValid) {
+      return;
     }
+
+    try {
+      List<String> playlistsId = await UserApi().getUserPlaylist();
+      for (var playlistItem in playlistsId) {
+        PlaylistModel playlist = await PlaylistApi.fetchPlaylist(playlistItem);
+        userPlaylist.add(playlist);
+      }
+    } catch (error) {
+      print('Error fetching user playlists: $error');
+    }
+  }
 
   @override
   void onInit() {

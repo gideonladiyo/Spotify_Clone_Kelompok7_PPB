@@ -2,6 +2,7 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify_group7/data/functions/text_controller.dart';
+import 'package:spotify_group7/data/models/album.dart';
 import 'package:spotify_group7/data/models/music.dart';
 import 'package:spotify_group7/data/models/playlist.dart';
 import 'package:spotify_group7/design_system/styles/app_colors.dart';
@@ -15,7 +16,9 @@ class MusicPlayer extends StatefulWidget {
   final Music music;
   PlaylistModel? playlist;
   int? idx;
-  MusicPlayer({super.key, required this.music, this.playlist, this.idx});
+  Albums? album;
+  MusicPlayer(
+      {super.key, required this.music, this.playlist, this.idx, this.album});
 
   @override
   State<MusicPlayer> createState() => _MusicPlayerState();
@@ -34,26 +37,31 @@ class _MusicPlayerState extends State<MusicPlayer> {
   void initState() {
     super.initState();
     print(
-        "MusicPlayer initialized with: music=${widget.music.trackId}, playlist=${widget.playlist?.id}, idx=${widget.idx}");
+        "MusicPlayer initialized with: music=${widget.music.trackId}, playlist=${widget.playlist?.id}, album=${widget.album?.id}, idx=${widget.idx}");
     _loadMusic();
   }
 
   _loadMusic() async {
     try {
       bool isTokenValid = await TokenManager.refreshAccessToken();
-
       if (!isTokenValid) {
         print("Failed to refresh token.");
         return;
       }
+
       MusicApi musicApi = MusicApi();
       Music musicData;
+
       if (widget.playlist != null && widget.idx != null) {
         musicData = await musicApi
             .fetchMusic(widget.playlist!.musics![widget.idx!].trackId);
+      } else if (widget.album != null && widget.idx != null) {
+        musicData = await musicApi
+            .fetchMusic(widget.album!.musics![widget.idx!].trackId);
       } else {
         musicData = await musicApi.fetchMusic(widget.music.trackId);
       }
+
       Music music = musicData;
       final yt = YoutubeExplode();
       final video = (await yt.search
@@ -84,13 +92,20 @@ class _MusicPlayerState extends State<MusicPlayer> {
         widget.idx = newIndex;
         _loadMusic();
       });
+    } else if (widget.album != null) {
+      setState(() {
+        widget.idx = newIndex;
+        _loadMusic();
+      });
+    } else {
+      _showSnackbar();
     }
   }
 
   void _showSnackbar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("Tidak bisa next/prev. Playlist atau indeks null."),
+        content: Text("Tidak bisa next/prev. Sumber data tidak valid."),
         duration: Duration(seconds: 2),
       ),
     );
@@ -143,7 +158,6 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   ),
                   IconButton(
                     onPressed: () {
-                      player.pause();
                       Navigator.pop(context);
                     },
                     icon: const Icon(
@@ -186,24 +200,31 @@ class _MusicPlayerState extends State<MusicPlayer> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  StreamBuilder(
-                      stream: player.onPositionChanged,
-                      builder: (context, data) {
-                        return ProgressBar(
-                          progress: data.data ?? const Duration(seconds: 0),
-                          total: widget.music.duration ??
-                              const Duration(minutes: 4),
-                          bufferedBarColor: Colors.white38,
-                          baseBarColor: Colors.white10,
-                          thumbColor: Colors.white,
-                          timeLabelTextStyle:
-                              const TextStyle(color: Colors.white),
-                          progressBarColor: Colors.white,
-                          onSeek: (duration) {
-                            player.seek(duration);
-                          },
-                        );
-                      }),
+                  StreamBuilder<Duration>(
+                    stream: player.onPositionChanged,
+                    builder: (context, data) {
+                      final currentDuration = data.data ?? Duration.zero;
+                      final totalDuration = widget.music.duration ?? const Duration(minutes: 4);
+
+                      if (currentDuration >= totalDuration) {
+                        _prevNextMusic(widget.idx! + 1);
+                      }
+
+                      return ProgressBar(
+                        progress: currentDuration,
+                        total: totalDuration,
+                        bufferedBarColor: Colors.white38,
+                        baseBarColor: Colors.white10,
+                        thumbColor: Colors.white,
+                        timeLabelTextStyle: const TextStyle(color: Colors.white),
+                        progressBarColor: Colors.white,
+                        onSeek: (duration) {
+                          player.seek(duration);
+                        },
+                      );
+                    },
+                  ),
+
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -214,7 +235,9 @@ class _MusicPlayerState extends State<MusicPlayer> {
                               color: Colors.white)),
                       IconButton(
                           onPressed: () async {
-                            if (widget.playlist != null && widget.idx != null) {
+                            if (widget.idx != null &&
+                                (widget.playlist != null ||
+                                    widget.album != null)) {
                               await player.pause();
                               _prevNextMusic(widget.idx! - 1);
                             } else {
@@ -227,15 +250,6 @@ class _MusicPlayerState extends State<MusicPlayer> {
                           onPressed: () async {
                             if (player.state == PlayerState.playing) {
                               await player.pause();
-                              if (widget.playlist != null &&
-                                  widget.idx != null) {
-                                print(
-                                    "music id from playlist ${widget.playlist!.musics?[widget.idx!].trackId}");
-                                print(
-                                    "music id actual ${widget.music.trackId}");
-                              } else {
-                                print("tidak muncul");
-                              }
                             } else {
                               await player.resume();
                             }
@@ -250,7 +264,9 @@ class _MusicPlayerState extends State<MusicPlayer> {
                           )),
                       IconButton(
                           onPressed: () async {
-                            if (widget.playlist != null && widget.idx != null) {
+                            if (widget.idx != null &&
+                                (widget.playlist != null ||
+                                    widget.album != null)) {
                               await player.pause();
                               _prevNextMusic(widget.idx! + 1);
                             } else {

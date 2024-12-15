@@ -23,12 +23,10 @@ class PlaylistController extends GetxController {
     for (String playlistId in listIdPlaylist) {
       try {
         bool isTokenValid = await TokenManager.refreshAccessToken();
-
         if (!isTokenValid){
           print("Failed to refresh access token. Skip playlist id $playlistId");
           continue;
         }
-
         PlaylistModel playlistData = await PlaylistApi.fetchPlaylist(playlistId); 
         loadedPlaylists.add(playlistData);
       } catch (e) {

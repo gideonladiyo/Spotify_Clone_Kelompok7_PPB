@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_group7/controller/artist/artist_controller.dart';
+import 'package:spotify_group7/data/models/artists.dart';
 import 'package:spotify_group7/design_system/styles/app_colors.dart';
-import 'package:spotify_group7/design_system/styles/padding_col.dart';
 import 'package:spotify_group7/design_system/styles/typograph_col.dart';
 import 'package:get/get.dart';
-import 'package:spotify_group7/design_system/widgets/song_card/custom_song_card.dart';
-import 'package:spotify_group7/design_system/widgets/song_card/song_with_artis.dart';
-import 'package:spotify_group7/presentation/music_player/music_player.dart';
+import 'package:spotify_group7/presentation/artis/artist_album.dart';
+import 'package:spotify_group7/presentation/artis/artist_top_track.dart';
 
-class Artis extends StatelessWidget {
-  Artis artis;
-  Artis({super.key, required this.artis});
+class ArtistView extends StatelessWidget {
+  final Artists artist;
+  ArtistView({super.key, required this.artist});
   ArtistController controller = Get.put(ArtistController());
 
   @override
   Widget build(BuildContext context) {
+    controller.artist.value = artist;
+    controller.getArtistTop(artist.id);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -54,20 +55,15 @@ class Artis extends StatelessWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
-                              image: NetworkImage(artis ?? ''),
+                              image: NetworkImage(controller.artist.value?.imageUrl ?? ''),
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
                         SizedBox(height: 20),
                         Text(
-                          controller.user.value?.name ?? '-',
+                          controller.artist.value?.name ?? '-',
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          controller.user.value?.email ?? '-',
-                          style: TextStyle(fontSize: 14),
                         ),
                         SizedBox(height: 30),
                         Row(
@@ -77,7 +73,7 @@ class Artis extends StatelessWidget {
                               children: [
                                 Text("Followers", style: TextStyle(fontSize: 12)),
                                 SizedBox(height: 5),
-                                Text("${controller.user.value?.followers}",
+                                Text("${controller.artist.value?.followers}",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold, fontSize: 20)),
                               ],
@@ -116,7 +112,7 @@ class Artis extends StatelessWidget {
                         ),
                         Tab(
                             child: Text(
-                              "Artist",
+                              "Album",
                               style: TypographCol.h2,
                             ))
                       ],
@@ -126,8 +122,8 @@ class Artis extends StatelessWidget {
                     height: 500,
                     child: TabBarView(
                       children: [
-                        TopTracks(),
-                        TopArtists(),
+                        ArtistTopTracks(),
+                        ArtistAlbum(),
                       ],
                     ),
                   ),

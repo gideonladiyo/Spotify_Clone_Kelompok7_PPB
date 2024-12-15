@@ -6,6 +6,7 @@ import 'package:spotify_group7/design_system/styles/typograph_col.dart';
 import 'package:spotify_group7/design_system/widgets/song_card/custom_song_card.dart';
 import 'package:spotify_group7/presentation/home/list_album.dart';
 import 'package:spotify_group7/presentation/home/list_artist.dart';
+import 'package:spotify_group7/presentation/home/list_playlist.dart';
 import 'package:spotify_group7/presentation/music_player/music_player.dart';
 import 'package:get/get.dart';
 
@@ -19,7 +20,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -85,7 +86,6 @@ class HomePage extends StatelessWidget {
                 }),
               ),
               SizedBox(height: PaddingCol.xxxl),
-
               TabBar(
                 indicatorColor: Colors.white,
                 labelColor: Colors.white,
@@ -102,6 +102,11 @@ class HomePage extends StatelessWidget {
                         "Album",
                         style: TypographCol.h2,
                       )),
+                  Tab(
+                      child: Text(
+                        "Playlist",
+                        style: TypographCol.h2,
+                      )),
                 ],
               ),
               SizedBox(
@@ -109,10 +114,8 @@ class HomePage extends StatelessWidget {
                 child: TabBarView(
                   children: [
                     ListArtistHome(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: ListAlbumHome(),
-                    ),
+                    ListAlbumHome(),
+                    ListPlaylist()
                   ],
                 ),
               ),
