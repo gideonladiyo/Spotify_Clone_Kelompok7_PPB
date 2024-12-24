@@ -4,10 +4,12 @@ import 'package:spotify_group7/design_system/styles/typograph_col.dart';
 import '../../../data/models/artists.dart';
 
 class ArtistTile extends StatelessWidget {
+  final VoidCallback artistViewDirections;
   final Artists artist;
   final double tileHeight; // Tambahkan parameter tinggi
 
   const ArtistTile({
+    required this.artistViewDirections,
     required this.artist,
     this.tileHeight = 100, // Default tinggi jika tidak ditentukan
   });
@@ -33,7 +35,7 @@ class ArtistTile extends StatelessWidget {
           ),
           title: Text(artist.name, style: TypographCol.h3),
           trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),
-          onTap: () {},
+          onTap: artistViewDirections
         ),
       ),
     );

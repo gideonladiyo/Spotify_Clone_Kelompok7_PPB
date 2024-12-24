@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_group7/design_system/styles/image_col.dart';
 
 class PlaylistItem extends StatelessWidget {
   final String title;
@@ -20,7 +21,12 @@ class PlaylistItem extends StatelessWidget {
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
+              child: imageUrl == ''
+              ? Image.asset(
+                AppImages.logo_lagu,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ) : Image.network(
                 imageUrl,
                 width: double.infinity,
                 fit: BoxFit.cover,

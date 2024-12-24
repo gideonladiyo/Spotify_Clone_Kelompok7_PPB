@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
+
 
 class Music {
   Duration? duration;
@@ -8,6 +10,7 @@ class Music {
   String? songImage;
   String? artistImage;
   Color? songColor;
+  String? audioUrl;
 
   Music({
     this.duration,
@@ -17,6 +20,7 @@ class Music {
     this.songImage,
     this.artistImage,
     this.songColor,
+    this.audioUrl
   });
 
   factory Music.fromMap(Map<String, dynamic> trackData) {
