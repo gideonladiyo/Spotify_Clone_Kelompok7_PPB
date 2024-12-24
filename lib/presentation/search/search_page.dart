@@ -57,11 +57,16 @@ class SearchPage extends StatelessWidget {
                       controller.searchTracks(searchController.text);
                     }
                   },
-                  child: Icon(Icons.search, color: Colors.black,),
+                  child: Icon(
+                    Icons.search,
+                    color: Colors.black,
+                  ),
                 )
               ],
             ),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             Obx(() {
               return Wrap(
                 spacing: 10,
@@ -150,15 +155,13 @@ class SearchPage extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (BuildContext builder) {
-                                      return MusicPlayer(
-                                          music: music,
-                                      );
-                                    }
-                                ),
+                                  return MusicPlayer(
+                                    music: music,
+                                  );
+                                }),
                               );
                             },
-                            music: music
-                        ), // Add appropriate widget here
+                            music: music), // Add appropriate widget here
                       );
                     },
                   );
@@ -169,25 +172,25 @@ class SearchPage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       Artists artist = controller.artistResult[index];
                       return ArtistTile(
-                        artistViewDirections: (){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext builder) {
-                                  print("Navigating to Artist page with: id=${artist.id}");
-                                  return ArtistView(artist: artist);
-                                }
-                            ),
-                          );
-                        },
-                          artist: artist
-                      );
+                          artistViewDirections: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext builder) {
+                                print(
+                                    "Navigating to Artist page with: id=${artist.id}");
+                                return ArtistView(artist: artist);
+                              }),
+                            );
+                          },
+                          artist: artist);
                     },
                   );
                 } else if (selectedCategory == 'Playlist') {
                   // GridView for Playlist
                   return GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
@@ -212,15 +215,15 @@ class SearchPage extends StatelessWidget {
                         child: PlaylistItem(
                             title: truncateTitle(playlist.title ?? '', 24),
                             count: playlist.count ?? '0 Songs',
-                            imageUrl: playlist.imageUrl ?? ''
-                        ),
+                            imageUrl: playlist.imageUrl ?? ''),
                       );
                     },
                   );
                 } else if (selectedCategory == 'Album') {
                   // GridView for Album
                   return GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
@@ -244,7 +247,6 @@ class SearchPage extends StatelessWidget {
                 }
               }),
             ),
-
           ],
         ),
       ),
