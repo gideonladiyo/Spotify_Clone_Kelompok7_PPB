@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
-import 'package:spotify_group7/data/functions/api.dart';
 import 'package:spotify_group7/data/functions/token_manager.dart';
 import 'package:spotify_group7/data/models/album.dart';
 import 'package:spotify_group7/data/models/artists.dart';
 import 'package:spotify_group7/data/models/music.dart';
+import 'package:spotify_group7/data/repositories/album/album_api.dart';
+import 'package:spotify_group7/data/repositories/artist/artist_api.dart';
+import 'package:spotify_group7/data/repositories/music/music_api.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:spotify_group7/design_system/constant/list_item.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';

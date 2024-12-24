@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 class CustomStrings {
   static const String clientId = '55a7b8fce8fa495596b839a8577ce612';
   static const String clientSecret = '07d19074fb6943978b8435a69be4c9da';
-  static String accessToken = 'BQByb5Kl-mV0K9iEucxrBrPBjKVGhcNuQTTzNOqiHSRMrmO7okyj0GKgOWBNEjA3f4XXzr2xEU9brYy2XZLVMNFVioapB3UFqbwtMPL_SKCMwkY_I1kC5flNfIfoMa_OLrDitIsqBojCXM6cd-O3qdQlQsz6w6gk9deIDChLYxShOpiiTU4NEFGjHQyDDeAQGUEgMqk1Jo_ti_6mja4Y5m1ArMVB2ucibGGWYzhgyMcZuEbUfgilzwklhVNX4I3OdueijkxoTJyPpfupqEcnYP5s_v79L--ytRk0z6-vWSPFjXgtuBabQhdrzP8OQ0ySOXOBVx8Z';
-  static String refreshToken = 'AQCOohmVVe4Y5U8xOFPlPgARAr0b1Szo5jQRSVZbNEqlNAj-VZXsUbTTqEBJm_icZmZeP9-RS3qpS1nLvqZKBtFMyVgPxcL7og8Qk4c_tEj614a9yw00IpDYPvAuUW16LQs';
+  static String? accessToken;
+  static String? refreshToken;
+  static String redirectUri = 'myapp://spotify-login/callback';
 }

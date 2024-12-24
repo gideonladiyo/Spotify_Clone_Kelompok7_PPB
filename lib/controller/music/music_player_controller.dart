@@ -1,7 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import '../../data/functions/api.dart';
 import '../../data/functions/token_manager.dart';
 import '../../data/models/music.dart';
 import '../../data/models/playlist.dart';

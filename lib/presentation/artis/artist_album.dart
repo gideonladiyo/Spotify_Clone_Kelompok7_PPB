@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_group7/controller/artist/artist_controller.dart';
 import 'package:get/get.dart';
-import 'package:spotify_group7/data/models/music.dart';
-import 'package:spotify_group7/design_system/widgets/song_card/song_with_artis.dart';
-
 import '../../data/functions/text_controller.dart';
 import '../../design_system/widgets/song_card/playlist_item.dart';
 import '../album/album.dart';
-import '../music_player/music_player.dart';
 
 class ArtistAlbum extends StatelessWidget {
   ArtistAlbum({super.key});

@@ -1,193 +1,136 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:spotify_group7/design_system/styles/app_colors.dart';
-import 'package:spotify_group7/design_system/widgets/button/custom_button.dart';
+import 'package:spotify_group7/design_system/constant/string.dart';
+import 'package:spotify_group7/presentation/home/home.dart';
+import 'package:spotify_group7/presentation/login/not_user.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 40),
-              // Logo dan judul
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  Icon(Icons.arrow_back, color: Colors.white),
-                  SizedBox(width: 80),
-                  Image(
-                    image: AssetImage('assets/images/spotify_logo.png'),
-                    height: 40,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 50),
-              const Text(
-                'Log In',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'If You Need Any Support',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(width: 5),
-                    const Text(
-                      'Click Here',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 40),
-              // Field input username/email
-              TextField(
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.black,
-                  hintText: 'Enter Username Or Email',
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Field input password
-              TextField(
-                style: const TextStyle(color: Colors.white),
-                obscureText: true,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.black,
-                  hintText: 'Password',
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  suffixIcon:
-                      const Icon(Icons.visibility_off, color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Link "Forgot Password?"
-              Align(
-                alignment: Alignment.centerRight,
-                child: GestureDetector(
-                  onTap: () {},
-                  child: const Text(
-                    'Forgot password?',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-              // Tombol "Log In"
-              BasicButton(
-                onPressed: () {
-                  // Tambahkan aksi tombol
-                },
-                title: 'Log In',
-                textStyle: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Separator
-              Row(
-                children: const [
-                  Expanded(child: Divider(color: Colors.grey)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      'Or',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                  Expanded(child: Divider(color: Colors.grey)),
-                ],
-              ),
-              const SizedBox(height: 20),
-              // Tombol login media sosial
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildSocialButton(Icons.facebook, Colors.blue),
-                  _buildSocialButton(Icons.g_mobiledata, Colors.red),
-                  _buildSocialButton(Icons.apple, Colors.white),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Don't Have An Account? ",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const Text(
-                      'Register',
-                      style: TextStyle(
-                        color: Colors.yellow,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  late final WebViewController _controller;
+  String scope = 'playlist-read-private playlist-modify-private playlist-modify-public ugc-image-upload user-read-email user-read-private user-follow-modify user-follow-read user-library-modify user-library-read user-top-read';
+
+  @override
+  void initState(){
+    super.initState();
+    final WebViewController controller = WebViewController();
+
+    controller
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onUrlChange: (UrlChange urlChange) {},
+          onNavigationRequest: (NavigationRequest request) async {
+            String redirectUrl = 'myapp://spotify-login/callback';
+            if (request.url.contains("${redirectUrl}?code")) {
+              _controller.loadRequest(Uri.parse("about:blank"));
+
+              final Uri uri = Uri.parse(request.url);
+              String? code = uri.queryParameters['code'];
+
+              if (code != null) {
+                bool isSuccess = await _exchangeCodeForToken(code);
+
+                if (isSuccess) {
+                  bool isUser = await getUserInfo();
+                  if (isUser){
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => Home()),
+                    );
+                  } else{
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => NotUser()),
+                    );
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to login')),
+                  );
+                }
+              }
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+          onWebResourceError: (WebResourceError error) {},
         ),
-      ),
-    );
+      )
+      ..loadRequest(Uri.parse(
+          'https://accounts.spotify.com/authorize?response_type=code&client_id=${CustomStrings.clientId}&scope=$scope&redirect_uri=${CustomStrings.redirectUri}&state=y82W1K5FlTLQJiQE'));
+    print(scope);
+    _controller = controller;
   }
 
-  Widget _buildSocialButton(IconData icon, Color color) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        height: 50,
-        width: 50,
-        decoration: BoxDecoration(
-          color: Colors.grey[900],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, color: color),
-      ),
-    );
+  Future<bool> _exchangeCodeForToken(String code) async {
+
+    final String credentials =
+    base64Encode(utf8.encode('${CustomStrings.clientId}:${CustomStrings.clientSecret}'));
+
+    final Uri tokenUri = Uri.parse('https://accounts.spotify.com/api/token');
+
+    try {
+      final response = await http.post(
+        tokenUri,
+        headers: {
+          'Authorization': 'Basic $credentials',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {
+          'grant_type': 'authorization_code',
+          'code': code,
+          'redirect_uri': CustomStrings.redirectUri,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        CustomStrings.accessToken = data['access_token'];
+        CustomStrings.refreshToken = data['refresh_token'];
+        return true;
+      } else {
+        print('Failed to exchange token: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error during token exchange: $e');
+      return false;
+    }
+  }
+
+  Future<bool> getUserInfo() async{
+    String _authToken = 'Bearer ${CustomStrings.accessToken}';
+    String url = 'https://api.spotify.com/v1/me';
+    try{
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': _authToken,
+        },
+      );
+      print("url: $url");
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print("Unexpected status code: ${response.statusCode}");
+        return false;
+      }
+    } catch(e){
+      print(e);
+      return false;
+    }
+  }
+
+  Widget build(BuildContext context) {
+    return WebViewWidget(controller: _controller);
   }
 }

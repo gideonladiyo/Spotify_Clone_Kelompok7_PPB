@@ -20,6 +20,11 @@ android {
     }
 
     defaultConfig {
+        manifestPlaceholders = [
+                redirectSchemeName: "myapp",  // Sesuaikan dengan schema
+                redirectHostName: "spotify-login", // Sesuaikan dengan host
+                applicationName: "io.flutter.app.FlutterApplication"
+        ]
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.spotify_group7"
         // You can update the following values to match your application needs.

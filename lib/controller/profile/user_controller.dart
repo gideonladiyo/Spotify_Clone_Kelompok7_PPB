@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:spotify_group7/data/functions/api.dart';
 import 'package:spotify_group7/data/models/music.dart';
 import 'package:spotify_group7/data/models/users.dart';
-
+import 'package:spotify_group7/data/repositories/playlist/playlist_api.dart';
+import 'package:spotify_group7/data/repositories/user/user_api.dart';
 import '../../data/functions/token_manager.dart';
 import '../../data/models/playlist.dart';
 
@@ -21,7 +21,6 @@ class UserController extends GetxController {
       Users userData = await UserApi().getUserInfo();
       user.value = userData;
 
-      await createUserLikedSong();
       await getUserPlaylist();
     } catch (e) {
       print('Error fetching user info: $e');
@@ -77,6 +76,8 @@ class UserController extends GetxController {
     if (!isTokenValid) {
       return;
     }
+    userPlaylist.value = [];
+    await createUserLikedSong();
 
     try {
       List<String> playlistsId = await UserApi().getUserPlaylist();

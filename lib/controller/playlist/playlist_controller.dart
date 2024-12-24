@@ -2,9 +2,8 @@ import 'package:get/get.dart';
 import 'package:spotify_group7/controller/home/home_controller.dart';
 import 'package:spotify_group7/data/models/music.dart';
 import 'package:spotify_group7/data/models/playlist.dart';
+import 'package:spotify_group7/data/repositories/playlist/playlist_api.dart';
 import 'package:spotify_group7/presentation/playlist/playlist.dart';
-
-import '../../data/functions/api.dart';
 import '../../data/functions/token_manager.dart';
 import '../../design_system/constant/list_item.dart';
 

@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
 import 'package:spotify_group7/data/models/artists.dart';
 import 'package:spotify_group7/data/models/music.dart';
-
-import '../../data/functions/api.dart';
+import 'package:spotify_group7/data/repositories/user/user_api.dart';
 import '../../data/functions/token_manager.dart';
 
 class UserTopController extends GetxController {

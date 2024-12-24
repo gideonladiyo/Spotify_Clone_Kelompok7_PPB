@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
-import 'package:spotify_group7/data/functions/api.dart';
 import 'package:spotify_group7/data/models/album.dart';
 import 'package:spotify_group7/data/models/artists.dart';
 import 'package:spotify_group7/data/models/music.dart';
+import 'package:spotify_group7/data/repositories/album/album_api.dart';
+import 'package:spotify_group7/data/repositories/artist/artist_api.dart';
 
 import '../../data/functions/token_manager.dart';
 
@@ -29,7 +30,11 @@ class ArtistController extends GetxController {
 
     try {
       List<Albums> albumData = await ArtistApi().fetchArtistAlbums(id);
-      artistAlbums.value = albumData;
+      artistAlbums.value = [];
+      for (var item in albumData){
+        Albums loadedAlbum = await AlbumApi().fetchAlbum(item.id);
+        artistAlbums.add(loadedAlbum);
+      }
     } catch (e){
       print(e);
     }

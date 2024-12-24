@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:spotify_group7/data/functions/api.dart';
 import 'package:spotify_group7/data/functions/token_manager.dart';
 import 'package:spotify_group7/data/models/album.dart';
 import 'package:spotify_group7/data/models/artists.dart';
 import 'package:spotify_group7/data/models/music.dart';
 import 'package:spotify_group7/data/models/playlist.dart';
+import 'package:spotify_group7/data/repositories/search/search_api.dart';
 
 class SearchPageController extends GetxController {
   final SearchApi searchApi = SearchApi();

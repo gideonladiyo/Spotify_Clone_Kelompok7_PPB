@@ -5,10 +5,10 @@ import 'package:spotify_group7/data/functions/text_controller.dart';
 import 'package:spotify_group7/data/models/album.dart';
 import 'package:spotify_group7/data/models/music.dart';
 import 'package:spotify_group7/data/models/playlist.dart';
+import 'package:spotify_group7/data/repositories/music/music_api.dart';
 import 'package:spotify_group7/design_system/styles/app_colors.dart';
 import 'package:spotify_group7/design_system/widgets/art_work_image.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import '../../data/functions/api.dart';
 import '../../data/functions/token_manager.dart';
 
 // ignore: must_be_immutable
