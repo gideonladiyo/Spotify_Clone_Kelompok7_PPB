@@ -10,7 +10,6 @@ import 'package:spotify_group7/presentation/home/list_playlist.dart';
 import 'package:spotify_group7/presentation/music_player/music_player.dart';
 import 'package:get/get.dart';
 
-
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
@@ -18,7 +17,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -26,12 +24,10 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  height: 40,
-                  width: 300,
-                  color: Colors.white,
+              Center(
+                child: Image.asset(
+                  "assets/images/spotify_logo.png",
+                  width: 150,
                 ),
               ),
               SizedBox(height: 40),
@@ -58,31 +54,32 @@ class HomePage extends StatelessWidget {
                   return controller.musicList.isEmpty
                       ? const Center(child: CircularProgressIndicator())
                       : GridView.builder(
-                    scrollDirection: Axis.horizontal,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      childAspectRatio: 1,
-                    ),
-                    itemCount: controller.musicList.length,
-                    itemBuilder: (context, index) {
-                      Music music = controller.musicList[index];
-                      return CustomSongCard(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => MusicPlayer(
-                                  music: music
-                              ),
-                            ),
-                          );
-                        },
-                        imagePath: music.songImage ?? "default_song_url",
-                        title1: music.songName ?? "Name not Found",
-                        title2: music.artistName ?? "Artist name not found",
-                      );
-                    },
-                  );
+                          scrollDirection: Axis.horizontal,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 1,
+                            childAspectRatio: 1,
+                          ),
+                          itemCount: controller.musicList.length,
+                          itemBuilder: (context, index) {
+                            Music music = controller.musicList[index];
+                            return CustomSongCard(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        MusicPlayer(music: music),
+                                  ),
+                                );
+                              },
+                              imagePath: music.songImage ?? "default_song_url",
+                              title1: music.songName ?? "Name not Found",
+                              title2:
+                                  music.artistName ?? "Artist name not found",
+                            );
+                          },
+                        );
                 }),
               ),
               SizedBox(height: PaddingCol.xxxl),
@@ -99,24 +96,20 @@ class HomePage extends StatelessWidget {
                   ),
                   Tab(
                       child: Text(
-                        "Album",
-                        style: TypographCol.h2,
-                      )),
+                    "Album",
+                    style: TypographCol.h2,
+                  )),
                   Tab(
                       child: Text(
-                        "Playlist",
-                        style: TypographCol.h2,
-                      )),
+                    "Playlist",
+                    style: TypographCol.h2,
+                  )),
                 ],
               ),
               SizedBox(
                 height: 500,
                 child: TabBarView(
-                  children: [
-                    ListArtistHome(),
-                    ListAlbumHome(),
-                    ListPlaylist()
-                  ],
+                  children: [ListArtistHome(), ListAlbumHome(), ListPlaylist()],
                 ),
               ),
             ],

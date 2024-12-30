@@ -7,7 +7,6 @@ import '../../data/models/music.dart';
 import '../../data/models/playlist.dart';
 import 'package:get/get.dart';
 
-
 class PlaylistDetail extends StatelessWidget {
   final PlaylistModel playlist;
 
@@ -26,14 +25,27 @@ class PlaylistDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             playlist.imageUrl == ''
-            ? Image.asset(AppImages.logo_lagu)
-            : Image.network(playlist.imageUrl ?? "default_image_url"),
+                ? Image.asset(AppImages.logo_lagu)
+                : Image.network(playlist.imageUrl ?? "default_image_url"),
             const SizedBox(height: 16.0),
             Text("Playlist"),
-            SizedBox(height: 8,),
-            Text(
-              playlist.title ?? "No title",
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            SizedBox(
+              height: 8,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  playlist.title ?? "No title",
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                Icon(
+                  Icons.favorite,
+                  color: Colors.green,
+                  size: 30,
+                )
+              ],
             ),
             const SizedBox(height: 8.0),
             Text(
@@ -44,49 +56,47 @@ class PlaylistDetail extends StatelessWidget {
             playlist.musics == null || playlist.musics!.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : Expanded(
-              child: ListView.builder(
-                itemCount: playlist.musics!.length,
-                itemBuilder: (context, index) {
-                  Music music = playlist.musics![index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext builder) {
-                            print("Navigating to MusicPlayer with: music=${music.trackId}, playlist=${playlist?.id}, idx=$index");
-                            return MusicPlayer(
-                                music: music,
-                                playlist: playlist,
-                                idx: index
-                            );
-                          }
-                        ),
-                      );
-                    },
-                    child: MusicTile(
-                      songPlayerDirections: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext builder) {
-                                print("Navigating to MusicPlayer with: music=${music.trackId}, playlist=${playlist?.id}, idx=$index");
+                    child: ListView.builder(
+                      itemCount: playlist.musics!.length,
+                      itemBuilder: (context, index) {
+                        Music music = playlist.musics![index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext builder) {
+                                print(
+                                    "Navigating to MusicPlayer with: music=${music.trackId}, playlist=${playlist?.id}, idx=$index");
                                 return MusicPlayer(
                                     music: music,
                                     playlist: playlist,
-                                    idx: index
-                                );
-                              }
+                                    idx: index);
+                              }),
+                            );
+                          },
+                          child: MusicTile(
+                            songPlayerDirections: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext builder) {
+                                  print(
+                                      "Navigating to MusicPlayer with: music=${music.trackId}, playlist=${playlist?.id}, idx=$index");
+                                  return MusicPlayer(
+                                      music: music,
+                                      playlist: playlist,
+                                      idx: index);
+                                }),
+                              );
+                            },
+                            deleteTap: () {},
+                            music: music,
                           ),
                         );
                       },
-                      deleteTap: () {},
-                      music: music,
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
           ],
         ),
       ),
