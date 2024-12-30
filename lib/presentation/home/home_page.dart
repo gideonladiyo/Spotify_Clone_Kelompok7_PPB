@@ -30,15 +30,6 @@ class HomePage extends StatelessWidget {
                   width: 150,
                 ),
               ),
-              SizedBox(height: 40),
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  height: 128,
-                  width: 300,
-                  color: Colors.white,
-                ),
-              ),
               SizedBox(height: PaddingCol.xxxl),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 32),

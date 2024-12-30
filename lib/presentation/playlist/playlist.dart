@@ -12,7 +12,6 @@ class Playlist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Playlist"),
@@ -22,9 +21,9 @@ class Playlist extends StatelessWidget {
             icon: const Icon(Icons.add),
             onPressed: () {
               showDialog(
-                context: context,
-                builder: (context) => CreatePlaylistForm(userId: controller.user.value!.userId)
-              );
+                  context: context,
+                  builder: (context) => CreatePlaylistForm(
+                      userId: controller.user.value!.userId));
             },
           ),
         ],
@@ -64,7 +63,6 @@ class Playlist extends StatelessWidget {
                 );
         }),
       ),
-
     );
   }
 }
@@ -96,18 +94,29 @@ class CreatePlaylistForm extends StatelessWidget {
               'Create Playlist',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             TextField(
               controller: nameController,
-              decoration: InputDecoration(labelText: 'Playlist Name'),
+              decoration: InputDecoration(
+                hintText: 'Playlist Name',
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+              ),
             ),
+            SizedBox(height: 10),
             TextField(
               controller: descController,
-              decoration: InputDecoration(labelText: 'Playlist Description'),
+              decoration: InputDecoration(
+                hintText: 'Playlist Description',
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+              ),
             ),
+            SizedBox(height: 10),
             Row(
               children: [
                 Text('Public'),
+                SizedBox(width: 5),
                 StatefulBuilder(
                   builder: (context, setState) {
                     return Switch(
@@ -119,7 +128,7 @@ class CreatePlaylistForm extends StatelessWidget {
                       },
                     );
                   },
-                )
+                ),
               ],
             ),
             Spacer(),
@@ -133,7 +142,7 @@ class CreatePlaylistForm extends StatelessWidget {
                   child: Text('Cancel'),
                 ),
                 SizedBox(width: 8),
-                TextButton(
+                ElevatedButton(
                   onPressed: () async {
                     await controller.createPlaylist(
                       userId,
@@ -145,9 +154,11 @@ class CreatePlaylistForm extends StatelessWidget {
                     await controller
                         .getUserPlaylist(); // Refresh daftar playlist
                   },
-                  child: Text('Create'),
+                  child: Text(
+                    'Create',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
                 ),
-
               ],
             ),
           ],
