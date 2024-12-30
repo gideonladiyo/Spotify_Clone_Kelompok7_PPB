@@ -44,39 +44,10 @@ class AlbumView extends StatelessWidget {
                       itemCount: album.musics!.length,
                       itemBuilder: (context, index) {
                         Music music = album.musics![index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext builder) {
-                                print(
-                                    "Navigating to MusicPlayer with: music=${music.trackId}, playlist=${album.id}, idx=$index");
-                                return MusicPlayer(
-                                    music: music,
-                                    album: album,
-                                    idx: index);
-                              }),
-                            );
-                          },
-                          child: MusicTile(
-                            songPlayerDirections: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext builder) {
-                                  print(
-                                      "Navigating to MusicPlayer with: music=${music.trackId}, playlist=${album.id}, idx=$index");
-                                  return MusicPlayer(
-                                      music: music,
-                                      album: album,
-                                      idx: index);
-                                }),
-                              );
-                            },
-                            deleteTap: () {},
+                        return MusicTile(
                             music: music,
-                          ),
+                            index: index,
+                          album: album,
                         );
                       },
                     ),

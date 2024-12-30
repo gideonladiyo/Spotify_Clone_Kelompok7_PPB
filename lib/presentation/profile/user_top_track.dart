@@ -24,22 +24,7 @@ class TopTracks extends StatelessWidget {
                 itemCount: controller.tracks.length,
                 itemBuilder: (BuildContext context, int index) {
                   Music music = controller.tracks[index];
-                  return MusicTile(
-                      songPlayerDirections: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext builder) {
-                                return MusicPlayer(
-                                    music: music,
-                                    idx: index
-                                );
-                              }
-                          ),
-                        );
-                      },
-                      music: music
-                  );
+                  return MusicTile(music: music);
                 },
               );
             })

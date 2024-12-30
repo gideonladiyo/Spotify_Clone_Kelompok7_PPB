@@ -15,7 +15,6 @@ List listIdArtists = [
   '47z98pKd71yIbgXwe9LPVC',
   '3tMTXQyRrPmMyHv5SoC0TV',
   '3wOsYKZM0zcKNasi3I7fP4',
-  '2iDVt6mFbtbDEZG5ax0dT',
   '1v1khTmozNfxB2ET1Ep288',
   '6Sv2jkzH9sWQjwghW5ArMG',
   '0f6TyESD8E1mD2oLJ4TGv1',

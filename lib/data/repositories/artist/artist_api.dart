@@ -2,17 +2,18 @@ import 'package:spotify_group7/data/models/album.dart';
 import 'package:spotify_group7/data/models/artists.dart';
 import 'package:spotify_group7/data/models/music.dart';
 import 'package:http/http.dart' as http;
+import 'package:spotify_group7/design_system/constant/list_item.dart';
 import 'dart:convert';
 import 'package:spotify_group7/design_system/constant/string.dart';
 
 class ArtistApi {
-  static const String _baseUrl = 'https://api.spotify.com/v1/artists/';
+  static const String _baseUrl = 'https://api.spotify.com/v1/artists';
 
   static String _authToken = 'Bearer ${CustomStrings.accessToken}';
 
   Future<Artists> fetchArtist(String artistId) async {
     final response = await http.get(
-      Uri.parse('$_baseUrl$artistId'),
+      Uri.parse('$_baseUrl/$artistId'),
       headers: {
         'Authorization': _authToken,
       },
@@ -24,6 +25,29 @@ class ArtistApi {
       return artist;
     } else {
       throw Exception('Failed to load playlist');
+    }
+  }
+
+  Future<List<Artists>> fetchAllArtist() async {
+    List<Artists> artistList = [];
+    String ids = listIdArtists.join(",");
+    print('URL artist: $_baseUrl?ids=$ids');
+    final response = await http.get(
+      Uri.parse('$_baseUrl?ids=$ids'),
+      headers: {
+        'Authorization': _authToken,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseMap = jsonDecode(response.body);
+      for (var item in responseMap['artists']){
+        Artists artist = Artists.fromMap(item);
+        artistList.add(artist);
+      }
+    return artistList;
+    } else {
+      throw Exception('Failed to load all artist');
     }
   }
 

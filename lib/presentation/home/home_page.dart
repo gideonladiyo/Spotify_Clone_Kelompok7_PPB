@@ -55,19 +55,11 @@ class HomePage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             Music music = controller.musicList[index];
                             return CustomSongCard(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        MusicPlayer(music: music),
-                                  ),
-                                );
-                              },
                               imagePath: music.songImage ?? "default_song_url",
                               title1: music.songName ?? "Name not Found",
                               title2:
                                   music.artistName ?? "Artist name not found",
+                              music: music,
                             );
                           },
                         );

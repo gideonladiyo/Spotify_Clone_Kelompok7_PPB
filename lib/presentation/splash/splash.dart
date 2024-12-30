@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_group7/presentation/intro/get_started.dart';
+import 'package:spotify_group7/presentation/login/login.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -30,7 +31,7 @@ class _SplashPageState extends State<SplashPage> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => const GetStartedPage()
+        builder: (BuildContext context) => const LoginPage()
       )
     );
   }

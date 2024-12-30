@@ -18,48 +18,39 @@ class HomeController extends GetxController {
   var artists = <Artists>[].obs;
 
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
     loadMusic();
   }
 
-  void loadMusic() async{
+  void loadMusic() async {
     List<Music> loadedMusic = [];
-    for (String musicId in listIdTracks){
-      try{
-        bool isTokenValid = await TokenManager.refreshAccessToken();
-
-        if (!isTokenValid) {
-          print("Failed to refresh access token");
-          continue;
-        }
-
-        Music musicData = await MusicApi().fetchMusic(musicId);;
-        loadedMusic.add(musicData);
-      } catch (e) {
-        print("Error load ${e}");
+    try {
+      bool isTokenValid = await TokenManager.refreshAccessToken();
+      if (!isTokenValid) {
+        print("Failed to refresh access token");
       }
+
+      loadedMusic = await MusicApi().fetchAllMusics();
+    } catch (e) {
+      print("Error load ${e}");
     }
     musicList.value = loadedMusic;
     loadAlbum();
   }
 
-  void loadAlbum() async{
+  void loadAlbum() async {
     List<Albums> loadedAlbums = [];
-    for (String albumId in listIdAlbum) {
-      try {
-        bool isTokenValid = await TokenManager.refreshAccessToken();
+    try {
+      bool isTokenValid = await TokenManager.refreshAccessToken();
 
-        if (!isTokenValid) {
-          print("Failed to refresh access token. Skip album id $albumId");
-          continue;
-        }
-
-        Albums albumData = await AlbumApi().fetchAlbum(albumId);
-        loadedAlbums.add(albumData);
-      } catch (e) {
-        print('Error loading album $albumId: $e');
+      if (!isTokenValid) {
+        print("Failed to refresh access token.");
       }
+
+      loadedAlbums = await AlbumApi().fetchAllAlbum();
+    } catch (e) {
+      print('Error loading album: $e');
     }
     albums.value = loadedAlbums;
     loadArtist();
@@ -67,19 +58,15 @@ class HomeController extends GetxController {
 
   void loadArtist() async {
     List<Artists> loadedArtist = [];
-    for (String artistId in listIdArtists) {
-      try {
-        bool isTokenValid = await TokenManager.refreshAccessToken();
+    try {
+      bool isTokenValid = await TokenManager.refreshAccessToken();
 
-        if (!isTokenValid) {
-          print("Failed to refresh access token. Skip artist id $artistId");
-          continue;
-        }
-        Artists artistData = await ArtistApi().fetchArtist(artistId);
-        loadedArtist.add(artistData);
-      } catch (e) {
-        print("Error loading artist $e");
+      if (!isTokenValid) {
+        print("Failed to refresh access token.");
       }
+      loadedArtist = await ArtistApi().fetchAllArtist();
+    } catch (e) {
+      print("Error loading artist $e");
     }
     artists.value = loadedArtist;
   }

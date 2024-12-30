@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_group7/controller/music/music_player_controller.dart';
 import 'package:spotify_group7/data/models/music.dart';
+import 'package:get/get.dart';
+import '../../../data/models/album.dart';
+import '../../../data/models/playlist.dart';
 
 class MusicTile extends StatelessWidget {
-  final VoidCallback songPlayerDirections;
-  final VoidCallback? deleteTap;
   final Music music;
+  final PlaylistModel? playlist;
+  final Albums? album;
+  final int? index;
+  final VoidCallback? deleteTap;
 
   const MusicTile({
-    required this.songPlayerDirections,
-    this.deleteTap,
     required this.music,
-    Key? key,
-  }) : super(key: key);
+    this.playlist,
+    this.album,
+    this.index,
+    this.deleteTap,
+  });
 
   @override
   Widget build(BuildContext context) {
+    MusicController controller = Get.put(MusicController());
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(vertical: 8),
       leading: ClipRRect(
@@ -51,7 +59,22 @@ class MusicTile extends StatelessWidget {
               ],
             )
           : null,
-      onTap: songPlayerDirections,
+      onTap: () {
+        print("Navigate to music player with this atribute:");
+        if (playlist != null) {
+          print(music.songName);
+          print(playlist?.title ?? "no title");
+          print(index);
+          controller.navigateToMusicPlayer(
+              music: music, playlist: playlist, idx: index);
+        } else if (album != null) {
+          print(music.songName);
+          print(album?.title ?? "no title");
+          print(index);
+          controller.navigateToMusicPlayer(
+              music: music, album: album, idx: index);
+        }
+      },
     );
   }
 }

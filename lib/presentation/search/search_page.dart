@@ -12,6 +12,7 @@ import 'package:spotify_group7/design_system/widgets/song_card/artis_horizontal.
 import 'package:spotify_group7/design_system/widgets/song_card/custom_song_card.dart';
 import 'package:spotify_group7/design_system/widgets/song_card/playlist_item.dart';
 import 'package:spotify_group7/design_system/widgets/song_card/song_with_artis.dart';
+import 'package:spotify_group7/presentation/album/album.dart';
 import 'package:spotify_group7/presentation/music_player/music_player.dart';
 import 'package:spotify_group7/presentation/playlist/playlist_view.dart';
 
@@ -136,33 +137,7 @@ class SearchPage extends StatelessWidget {
                     itemCount: controller.musicResult.length,
                     itemBuilder: (context, index) {
                       Music music = controller.musicResult[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext builder) {
-                                return MusicPlayer(
-                                  music: music,
-                                );
-                              },
-                            ),
-                          );
-                        },
-                        child: MusicTile(
-                            songPlayerDirections: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext builder) {
-                                  return MusicPlayer(
-                                    music: music,
-                                  );
-                                }),
-                              );
-                            },
-                            music: music), // Add appropriate widget here
-                      );
+                      return MusicTile(music: music);
                     },
                   );
                 } else if (selectedCategory == 'Artist') {
@@ -232,11 +207,21 @@ class SearchPage extends StatelessWidget {
                     itemCount: controller.albumResult.length,
                     itemBuilder: (context, index) {
                       Albums album = controller.albumResult[index];
-                      return CustomSongCard(
-                        onPressed: () {},
-                        imagePath: album.imageUrl,
-                        title1: truncateTitle(album.title, 24),
-                        title2: album.totalTracks,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext builder) =>
+                                  AlbumView(album: album),
+                            ),
+                          );
+                        },
+                        child: PlaylistItem(
+                          title: truncateTitle(album.title, 24),
+                          count: album.totalTracks,
+                          imageUrl: album.imageUrl,
+                        ),
                       );
                     },
                   );

@@ -60,39 +60,10 @@ class PlaylistDetail extends StatelessWidget {
                       itemCount: playlist.musics!.length,
                       itemBuilder: (context, index) {
                         Music music = playlist.musics![index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext builder) {
-                                print(
-                                    "Navigating to MusicPlayer with: music=${music.trackId}, playlist=${playlist?.id}, idx=$index");
-                                return MusicPlayer(
-                                    music: music,
-                                    playlist: playlist,
-                                    idx: index);
-                              }),
-                            );
-                          },
-                          child: MusicTile(
-                            songPlayerDirections: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext builder) {
-                                  print(
-                                      "Navigating to MusicPlayer with: music=${music.trackId}, playlist=${playlist?.id}, idx=$index");
-                                  return MusicPlayer(
-                                      music: music,
-                                      playlist: playlist,
-                                      idx: index);
-                                }),
-                              );
-                            },
-                            deleteTap: () {},
-                            music: music,
-                          ),
+                        return MusicTile(
+                          music: music,
+                          index: index,
+                          playlist: playlist,
                         );
                       },
                     ),

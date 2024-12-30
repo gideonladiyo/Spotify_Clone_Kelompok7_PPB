@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_group7/controller/playlist/playlist_controller.dart';
 import 'package:spotify_group7/controller/profile/user_controller.dart';
 import 'package:spotify_group7/presentation/playlist/playlist_view.dart';
 import '../../data/functions/text_controller.dart';
 import '../../design_system/widgets/song_card/playlist_item.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class Playlist extends StatelessWidget {
   Playlist({Key? key}) : super(key: key);
   UserController controller = Get.put(UserController());

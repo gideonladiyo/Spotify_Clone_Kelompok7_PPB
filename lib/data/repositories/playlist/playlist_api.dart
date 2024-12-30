@@ -1,17 +1,18 @@
 import 'package:spotify_group7/data/models/music.dart';
 import 'package:spotify_group7/data/models/playlist.dart';
+import 'package:spotify_group7/design_system/constant/list_item.dart';
 import 'package:spotify_group7/design_system/constant/string.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class PlaylistApi {
-  static const String _baseUrl = 'https://api.spotify.com/v1/playlists/';
+  static const String _baseUrl = 'https://api.spotify.com/v1/playlists';
 
   static String _authToken = 'Bearer ${CustomStrings.accessToken}';
 
   static Future<PlaylistModel> fetchPlaylist(String playlistId) async {
     final response = await http.get(
-      Uri.parse('$_baseUrl$playlistId'),
+      Uri.parse('$_baseUrl/$playlistId'),
       headers: {
         'Authorization': _authToken,
       },
@@ -22,7 +23,6 @@ class PlaylistApi {
 
       if (responseMap['tracks'] is Map<String, dynamic>) {
         int totalTracks = responseMap['tracks']['total'] ?? 0;
-        print("Total tracks: $totalTracks");
 
         List<Music> musics = [];
         if (totalTracks > 0 &&
@@ -33,18 +33,6 @@ class PlaylistApi {
               musics.add(musicData);
             }
           }
-        }
-        print(responseMap['id']);
-        print(responseMap['owner']['id']);
-        print(responseMap['tracks']['total']);
-        if (responseMap['images'] != null) {
-          print("'${responseMap['images'][0]['url']}'");
-        }
-        if (responseMap['tracks'] == null ||
-            responseMap['tracks']['items'].isEmpty) {
-          print('null');
-        } else {
-          print("ada");
         }
         PlaylistModel playlist = PlaylistModel.fromMap(responseMap);
         playlist.musics = totalTracks > 0 ? musics : null;
@@ -59,7 +47,7 @@ class PlaylistApi {
 
   static Future<List<String>> fetchIdSongs(String playlistId) async {
     final response = await http.get(
-      Uri.parse('$_baseUrl$playlistId'),
+      Uri.parse('$_baseUrl/$playlistId'),
       headers: {
         'Authorization': _authToken,
       },
