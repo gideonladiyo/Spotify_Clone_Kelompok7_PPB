@@ -66,7 +66,6 @@ class _LoginPageState extends State<LoginPage> {
       )
       ..loadRequest(Uri.parse(
           'https://accounts.spotify.com/authorize?response_type=code&client_id=${CustomStrings.clientId}&scope=$scope&redirect_uri=${CustomStrings.redirectUri}&state=y82W1K5FlTLQJiQE'));
-    print(scope);
     _controller = controller;
   }
 

@@ -10,51 +10,48 @@ class ListArtistHome extends StatelessWidget {
   final HomeController controller = Get.put(HomeController());
 
   @override
-
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: SizedBox(
-          height: 600,
-          child: Obx(() {
-            return controller.artists.isEmpty
-                ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-              itemCount: controller.artists.length,
-              itemBuilder: (BuildContext context, int index) {
-                Artists artist = controller.artists[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext builder) {
-                            print("Navigating to Artist page with: id=${artist.id}");
-                            return ArtistView(artist: artist);
-                          }
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Obx(() {
+          return controller.artists.isEmpty
+              ? const Center(
+                  child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                ))
+              : ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: controller.artists.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Artists artist = controller.artists[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext builder) =>
+                                ArtistView(artist: artist),
+                          ),
+                        );
+                      },
+                      child: ArtistTile(
+                        artistViewDirections: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext builder) =>
+                                  ArtistView(artist: artist),
+                            ),
+                          );
+                        },
+                        artist: artist,
                       ),
                     );
                   },
-                  child: ArtistTile(
-                    artistViewDirections: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext builder) {
-                              print("Navigating to Artist page with: id=${artist.id}");
-                              return ArtistView(artist: artist);
-                            }
-                        ),
-                      );
-                    },
-                    artist: artist,
-                  ),
                 );
-              },
-            );
-          })
-        ),
+        }),
       ),
     );
   }

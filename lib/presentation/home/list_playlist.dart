@@ -8,21 +8,26 @@ import 'package:spotify_group7/presentation/playlist/playlist_view.dart';
 
 class ListPlaylist extends StatelessWidget {
   ListPlaylist({super.key});
-  PlaylistController controller = Get.put(PlaylistController());
+  final PlaylistController controller = Get.put(PlaylistController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(16),
         child: Obx(() {
-          return controller.playlists.isEmpty ?
-          const Center(child: CircularProgressIndicator(),)
-          : GridView.builder(
+          return controller.playlists.isEmpty
+              ? const Center(
+                  child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                ))
+              : GridView.builder(
+                  padding: EdgeInsets.zero,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
                     childAspectRatio: 3 / 4,
                   ),
                   itemCount: controller.playlists.length,

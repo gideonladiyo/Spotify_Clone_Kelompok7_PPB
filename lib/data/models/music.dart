@@ -11,6 +11,7 @@ class Music {
   String? artistImage;
   Color? songColor;
   String? audioUrl;
+  String uri;
 
   Music({
     this.duration,
@@ -20,7 +21,8 @@ class Music {
     this.songImage,
     this.artistImage,
     this.songColor,
-    this.audioUrl
+    this.audioUrl,
+    required this.uri
   });
 
   factory Music.fromMap(Map<String, dynamic> trackData) {
@@ -29,6 +31,7 @@ class Music {
       songName: trackData['name'],
       artistName: trackData['artists'][0]['name'],
       songImage: trackData['album']['images'][0]['url'],
+      uri: trackData['uri'],
     );
   }
 }

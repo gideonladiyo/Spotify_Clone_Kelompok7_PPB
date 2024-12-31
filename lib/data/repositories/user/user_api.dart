@@ -179,4 +179,57 @@ class UserApi {
       throw Exception('Failed to search tracks');
     }
   }
+
+  Future<void> savePlaylist(String playlistId) async {
+    String endPoint = 'https://api.spotify.com/v1/playlists/$playlistId/followers';
+
+    try {
+      if (_authToken.isEmpty) {
+        throw Exception('Auth token is null or empty');
+      }
+
+      final response = await http.put(
+        Uri.parse(endPoint),
+        headers: {
+          'Authorization': _authToken,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("Playlist berhasil disimpan");
+      } else {
+        print(
+            "Playlist gagal disimpan: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future<void> deletePlaylist(String playlistId) async {
+    String endPoint = 'https://api.spotify.com/v1/playlists/$playlistId/followers';
+
+    try {
+      if (_authToken.isEmpty) {
+        throw Exception('Auth token is null or empty');
+      }
+
+      final response = await http.delete(
+        Uri.parse(endPoint),
+        headers: {
+          'Authorization': _authToken,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("Playlist berhasil dihapus");
+      } else {
+        print("Playlist gagal dihapus: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
 }

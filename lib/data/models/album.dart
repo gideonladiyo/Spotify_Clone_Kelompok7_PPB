@@ -29,6 +29,7 @@ class Albums {
           songName: trackData['name'],
           artistName: trackData['artists'][0]['name'],
           songImage: map['images'][0]['url'],
+          uri: map['uri']
         );
       }).toList();
     }

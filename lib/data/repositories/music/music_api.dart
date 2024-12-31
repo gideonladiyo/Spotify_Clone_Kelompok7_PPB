@@ -65,4 +65,68 @@ class MusicApi {
         await PaletteGenerator.fromImageProvider(imageProvider);
     return paletteGenerator.dominantColor?.color;
   }
+
+  Future<void> saveTrack(String trackId) async {
+    const String endPoint = 'https://api.spotify.com/v1/me/tracks';
+
+    try {
+      if (_authToken.isEmpty) {
+        throw Exception('Auth token is null or empty');
+      }
+
+      final Map<String, dynamic> body = {
+        'ids': [trackId]
+      };
+
+      final response = await http.put(
+        Uri.parse(endPoint),
+        headers: {
+          'Authorization': '$_authToken',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        print("Musik berhasil disimpan");
+      } else {
+        print(
+            "Musik gagal disimpan: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future<void> deleteTrack(String trackId) async {
+    const String endPoint = 'https://api.spotify.com/v1/me/tracks';
+
+    try {
+      if (_authToken.isEmpty) {
+        throw Exception('Auth token is null or empty');
+      }
+
+      final Map<String, dynamic> body = {
+        'ids': [trackId]
+      };
+
+      final response = await http.delete(
+        Uri.parse(endPoint),
+        headers: {
+          'Authorization': '$_authToken',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        print("Musik berhasil dihapus");
+      } else {
+        print(
+            "Musik gagal dihapus: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
 }

@@ -150,9 +150,9 @@ class CreatePlaylistForm extends StatelessWidget {
                       descController.text,
                       isPublic,
                     );
-                    Navigator.of(context).pop(); // Tutup dialog
+                    Navigator.of(context).pop();
                     await controller
-                        .getUserPlaylist(); // Refresh daftar playlist
+                        .getUserPlaylist();
                   },
                   child: Text(
                     'Create',

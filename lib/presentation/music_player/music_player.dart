@@ -14,7 +14,6 @@ class MusicPlayer extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Obx(() {
-      // Membungkus seluruh tampilan dengan Obx untuk memantau perubahan controller
       return Scaffold(
         backgroundColor:
             controller.currentMusic.value?.songColor ?? Colors.transparent,
@@ -104,9 +103,18 @@ class MusicPlayer extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const Icon(
-                            Icons.favorite,
-                            color: AppColors.primaryColor,
+                          IconButton(
+                            onPressed: (){
+                              controller.toggleSave(controller.currentMusic.value!.trackId);
+                            },
+                            icon: Obx(() {
+                              return Icon(
+                                Icons.favorite,
+                                color: controller.isSongLiked.value
+                                    ? AppColors.primaryColor
+                                    : Colors.white,
+                              );
+                            }),
                           ),
                         ],
                       ),
@@ -199,7 +207,6 @@ class MusicPlayer extends StatelessWidget {
                             icon: Obx(() {
                               IconData iconData;
                               Color iconColor;
-
                               switch (controller.repeatMode.value) {
                                 case RepeatMode.off:
                                   iconData = Icons.repeat;

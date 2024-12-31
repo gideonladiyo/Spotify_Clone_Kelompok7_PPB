@@ -67,4 +67,72 @@ class PlaylistApi {
       throw Exception('Failed to load playlist');
     }
   }
+
+  Future<void> addTrackToPlaylist(String trackUri, String playlistId) async {
+    const String baseUrl = 'https://api.spotify.com/v1/playlists';
+    String endPoint = '$baseUrl/$playlistId/tracks';
+
+    try {
+      if (_authToken.isEmpty) {
+        throw Exception('Auth token is null or empty');
+      }
+
+      final Map<String, dynamic> body = {
+        'uris': [trackUri]
+      };
+
+      final response = await http.post(
+        Uri.parse(endPoint),
+        headers: {
+          'Authorization': '$_authToken',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 201) {
+        print("Musik berhasil ditambah");
+      } else {
+        print(
+            "Musik gagal ditambah: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future<void> removeTrackFromPlaylist(String trackUri, String playlistId) async {
+    const String baseUrl = 'https://api.spotify.com/v1/playlists';
+    String endPoint = '$baseUrl/$playlistId/tracks';
+
+    try {
+      if (_authToken.isEmpty) {
+        throw Exception('Auth token is null or empty');
+      }
+
+      final Map<String, dynamic> body = {
+        'tracks': [
+          {"uri": trackUri}
+        ]
+      };
+
+      final response = await http.delete(
+        Uri.parse(endPoint),
+        headers: {
+          'Authorization': '$_authToken',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        print("Musik berhasil dihapus");
+      } else {
+        print(
+            "Musik gagal dihapus: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
 }

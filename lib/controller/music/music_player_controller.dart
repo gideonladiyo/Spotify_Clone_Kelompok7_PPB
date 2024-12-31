@@ -1,5 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:spotify_group7/controller/profile/user_controller.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:spotify_group7/data/models/music.dart';
 import 'package:spotify_group7/data/models/playlist.dart';
@@ -8,9 +10,9 @@ import 'package:spotify_group7/data/repositories/music/music_api.dart';
 import 'package:spotify_group7/data/functions/token_manager.dart';
 
 enum RepeatMode {
-  off, // Tidak mengulang
-  single, // Mengulang satu lagu
-  playlist // Mengulang playlist/album
+  off,
+  single,
+  playlist
 }
 
 class MusicController extends GetxController {
@@ -21,10 +23,13 @@ class MusicController extends GetxController {
   final Rx<Duration> currentDuration = Duration.zero.obs;
   final Rx<Duration> totalDuration = const Duration(minutes: 4).obs;
   final RxBool isPlayerVisible = false.obs;
+  final RxBool isSongLiked = false.obs;
 
   PlaylistModel? currentPlaylist;
   Albums? currentAlbum;
   RxInt? currentIndex;
+
+  UserController userController = Get.put(UserController());
 
   @override
   void onInit() {
@@ -148,6 +153,7 @@ class MusicController extends GetxController {
 
       currentMusic.value = musicData;
       currentMusic.value?.duration = video.duration;
+      checkTrackSaved(currentMusic.value!.trackId);
       currentMusic.refresh();
       totalDuration.value = video.duration ?? const Duration(minutes: 4);
 
@@ -207,6 +213,59 @@ class MusicController extends GetxController {
 
   void musicSnackbar(String message) {
     Get.snackbar("Error!", message);
+  }
+
+  void musicSnackbarSuccess(String message) {
+    Get.snackbar("Success!", message, backgroundColor: Colors.white, colorText: Colors.black);
+  }
+
+  void checkTrackSaved(String trackId){
+    for (Music item in userController.userLikedTracks){
+      if (item.trackId == trackId){
+        isSongLiked.value = true;
+      }
+    }
+  }
+
+  void toggleSave(String trackId) async {
+    if (!isSongLiked.value) {
+      await saveTrack(trackId);
+    } else {
+      await deleteTrack(trackId);
+    }
+  }
+
+  Future<void> saveTrack(String trackId) async {
+    bool isTokenValid = await TokenManager.refreshAccessToken();
+    if (!isTokenValid) {
+      print("Token tidak valid atau gagal diperbarui.");
+      return;
+    }
+    try {
+      await MusicApi().saveTrack(trackId);
+      musicSnackbarSuccess("Lagu berhasil disimpan");
+      isSongLiked.value = true;
+      print("apakah lagu disimpan: ${isSongLiked.value}");
+      await userController.getUserPlaylist();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> deleteTrack(String trackId) async {
+    bool isTokenValid = await TokenManager.refreshAccessToken();
+    if (!isTokenValid) {
+      return;
+    }
+    try {
+      await MusicApi().deleteTrack(trackId);
+      musicSnackbarSuccess("Lagu berhasil dihapus dari favorit");
+      isSongLiked.value = false;
+      print("apakah lagu disimpan: ${isSongLiked.value}");
+      await userController.getUserPlaylist();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
