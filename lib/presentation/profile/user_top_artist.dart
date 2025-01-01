@@ -16,10 +16,19 @@ class TopArtists extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {
-          if (controller.artists.isEmpty) {
+          if (controller.isLoading.value) {
             return const Center(child: CircularProgressIndicator());
+          } else if (controller.artists.isEmpty) {
+            return const Center(
+              child: Text(
+                "No Top Artist Yet",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            );
           }
-
           return ListView.builder(
             itemCount: controller.artists.length,
             itemBuilder: (BuildContext context, int index) {

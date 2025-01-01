@@ -4,6 +4,7 @@ import 'package:spotify_group7/data/models/album.dart';
 import 'package:spotify_group7/data/models/artists.dart';
 import 'package:spotify_group7/data/models/music.dart';
 import 'package:spotify_group7/data/models/playlist.dart';
+import 'package:spotify_group7/data/repositories/album/album_api.dart';
 import 'package:spotify_group7/data/repositories/search/search_api.dart';
 
 class SearchPageController extends GetxController {
@@ -106,7 +107,10 @@ class SearchPageController extends GetxController {
         return;
       }
       List<Albums> albumData = await searchApi.searchAlbum(query);
-      albumResult.assignAll(albumData);
+      for (var item in albumData) {
+        Albums loadedAlbum = await AlbumApi().fetchAlbum(item.id);
+        albumResult.add(loadedAlbum);
+      }
       isLoading.value = false;
     } catch (e) {
       print("Failed Search");

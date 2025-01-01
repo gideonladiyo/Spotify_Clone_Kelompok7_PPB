@@ -7,6 +7,7 @@ class PlaylistModel {
   final String? count;
   final String? imageUrl;
   List<Music>? musics;
+  final String? deskripsi;
 
   PlaylistModel({
     required this.id,
@@ -15,6 +16,7 @@ class PlaylistModel {
     required this.count,
     required this.imageUrl,
     this.musics,
+    this.deskripsi,
   });
 
   factory PlaylistModel.fromMap(Map<String, dynamic> map) {
@@ -35,6 +37,7 @@ class PlaylistModel {
               .where((item) => item != null && item['track'] != null)
               .map((item) => Music.fromMap(item['track'])))
           : null,
+      deskripsi: map['deskripsi']
     );
   }
 }

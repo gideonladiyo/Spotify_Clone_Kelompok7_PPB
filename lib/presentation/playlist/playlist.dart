@@ -45,6 +45,7 @@ class Playlist extends StatelessWidget {
                     final playlist = controller.userPlaylist[index];
                     return GestureDetector(
                       onTap: () {
+                        controller.checkPlaylistSaved(playlist.id);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -113,24 +114,7 @@ class CreatePlaylistForm extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            Row(
-              children: [
-                Text('Public'),
-                SizedBox(width: 5),
-                StatefulBuilder(
-                  builder: (context, setState) {
-                    return Switch(
-                      value: isPublic,
-                      onChanged: (value) {
-                        setState(() {
-                          isPublic = value;
-                        });
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
+
             Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -148,7 +132,6 @@ class CreatePlaylistForm extends StatelessWidget {
                       userId,
                       nameController.text,
                       descController.text,
-                      isPublic,
                     );
                     Navigator.of(context).pop();
                     await controller

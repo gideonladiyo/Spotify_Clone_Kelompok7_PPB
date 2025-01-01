@@ -5,18 +5,40 @@ import 'package:spotify_group7/data/functions/text_controller.dart';
 import 'package:spotify_group7/design_system/styles/app_colors.dart';
 import 'package:spotify_group7/design_system/widgets/art_work_image.dart';
 import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
 
 class MusicPlayer extends StatelessWidget {
   final MusicController controller = Get.put(MusicController());
+
+  // Helper function to determine if background is dark
+  bool isDarkColor(Color color) {
+    // Calculate relative luminance using standard formula
+    double luminance = (0.299 * color.red + 0.587 * color.green + 0.114 * color.blue) / 255;
+    return luminance < 0.5;
+  }
+
+  // Get appropriate text color based on background
+  Color getTextColor(Color backgroundColor) {
+    return isDarkColor(backgroundColor) ? Colors.white : Colors.black;
+  }
+
+  Color getSecondaryTextColor(Color backgroundColor) {
+    return isDarkColor(backgroundColor)
+        ? Colors.white.withOpacity(0.6)
+        : Colors.black.withOpacity(0.6);
+  }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     return Obx(() {
+      final backgroundColor = controller.currentMusic.value?.songColor ?? Colors.transparent;
+      final primaryTextColor = getTextColor(backgroundColor);
+      final secondaryTextColor = getSecondaryTextColor(backgroundColor);
+
       return Scaffold(
-        backgroundColor:
-            controller.currentMusic.value?.songColor ?? Colors.transparent,
+        backgroundColor: backgroundColor,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 26),
@@ -33,28 +55,27 @@ class MusicPlayer extends StatelessWidget {
                       children: [
                         Text(
                           'Singing Now',
-                          style: textTheme.bodyMedium
-                              ?.copyWith(color: AppColors.primaryColor),
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: AppColors.primaryColor,
+                          ),
                         ),
                         const SizedBox(height: 6),
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage:
-                                  controller.currentMusic.value?.artistImage !=
-                                          null
-                                      ? NetworkImage(controller
-                                          .currentMusic.value!.artistImage!)
-                                      : null,
+                              backgroundColor: primaryTextColor,
+                              backgroundImage: controller.currentMusic.value?.artistImage != null
+                                  ? NetworkImage(controller.currentMusic.value!.artistImage!)
+                                  : null,
                               radius: 10,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               controller.currentMusic.value?.artistName ?? '-',
-                              style: textTheme.bodyLarge
-                                  ?.copyWith(color: Colors.white),
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: primaryTextColor,
+                              ),
                             )
                           ],
                         ),
@@ -64,9 +85,9 @@ class MusicPlayer extends StatelessWidget {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.close,
-                        color: Colors.white,
+                        color: primaryTextColor,
                       ),
                     ),
                   ],
@@ -75,7 +96,8 @@ class MusicPlayer extends StatelessWidget {
                   flex: 2,
                   child: Center(
                     child: ArtWorkImage(
-                        image: controller.currentMusic.value?.songImage),
+                      image: controller.currentMusic.value?.songImage,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -89,22 +111,23 @@ class MusicPlayer extends StatelessWidget {
                             children: [
                               Text(
                                 truncateTitle(
-                                    controller.currentMusic.value?.songName ??
-                                        '',
-                                    24),
-                                style: textTheme.titleLarge
-                                    ?.copyWith(color: Colors.white),
+                                  controller.currentMusic.value?.songName ?? '',
+                                  24,
+                                ),
+                                style: textTheme.titleLarge?.copyWith(
+                                  color: primaryTextColor,
+                                ),
                               ),
                               Text(
-                                controller.currentMusic.value?.artistName ??
-                                    '-',
-                                style: textTheme.titleMedium
-                                    ?.copyWith(color: Colors.white60),
+                                controller.currentMusic.value?.artistName ?? '-',
+                                style: textTheme.titleMedium?.copyWith(
+                                  color: secondaryTextColor,
+                                ),
                               ),
                             ],
                           ),
                           IconButton(
-                            onPressed: (){
+                            onPressed: () {
                               controller.toggleSave(controller.currentMusic.value!.trackId);
                             },
                             icon: Obx(() {
@@ -112,7 +135,7 @@ class MusicPlayer extends StatelessWidget {
                                 Icons.favorite,
                                 color: controller.isSongLiked.value
                                     ? AppColors.primaryColor
-                                    : Colors.white,
+                                    : primaryTextColor,
                               );
                             }),
                           ),
@@ -120,28 +143,19 @@ class MusicPlayer extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       StreamBuilder<Duration>(
-                        stream: controller.player.onPositionChanged,
-                        builder: (context, data) {
-                          final currentDuration = data.data ?? Duration.zero;
-                          final totalDuration =
-                              controller.currentMusic.value?.duration ??
-                                  const Duration(minutes: 4);
-                          print(
-                              "Durasi dalam stream builder: ${controller.currentMusic.value?.duration}");
-
-                          if (currentDuration >= totalDuration) {
-                            controller.playNext();
-                          }
+                        stream: controller.player.positionStream,
+                        builder: (context, snapshot) {
+                          final position = snapshot.data ?? Duration.zero;
+                          final duration = controller.player.duration ?? Duration.zero;
 
                           return ProgressBar(
-                            progress: currentDuration,
-                            total: totalDuration,
-                            bufferedBarColor: Colors.white38,
-                            baseBarColor: Colors.white10,
-                            thumbColor: Colors.white,
-                            timeLabelTextStyle:
-                                const TextStyle(color: Colors.white),
-                            progressBarColor: Colors.white,
+                            progress: position,
+                            total: duration,
+                            bufferedBarColor: primaryTextColor.withOpacity(0.38),
+                            baseBarColor: primaryTextColor.withOpacity(0.1),
+                            thumbColor: primaryTextColor,
+                            timeLabelTextStyle: TextStyle(color: primaryTextColor),
+                            progressBarColor: primaryTextColor,
                             onSeek: (duration) {
                               controller.player.seek(duration);
                             },
@@ -152,77 +166,106 @@ class MusicPlayer extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          IconButton(
+                          Opacity(
+                            opacity: 0.0,
+                            child: IconButton(
                               onPressed: () {},
-                              icon: const Icon(Icons.lyrics_outlined,
-                                  color: Colors.white)),
-                          IconButton(
-                              onPressed: () async {
-                                if (controller.currentIndex != null &&
-                                    (controller.currentPlaylist != null ||
-                                        controller.currentAlbum != null)) {
-                                  await controller.player.pause();
-                                  controller.playPrevious();
-                                } else {
-                                  controller.musicSnackbar(
-                                      "Tidak bisa memutar musik sebelumnya");
-                                }
-                              },
-                              icon: const Icon(Icons.skip_previous,
-                                  color: Colors.white, size: 36)),
-                          Obx(() {
-                            return IconButton(
-                              onPressed: () async {
-                                if (controller.isPlaying.value) {
-                                  await controller.player.pause();
-                                } else {
-                                  await controller.player.resume();
-                                }
-                              },
                               icon: Icon(
-                                controller.isPlaying.value
-                                    ? Icons.pause
-                                    : Icons.play_circle,
-                                color: Colors.white,
-                                size: 60,
+                                Icons.lyrics_outlined,
+                                color: primaryTextColor,
                               ),
-                            );
-                          }),
+                            ),
+                          ),
                           IconButton(
-                              onPressed: () async {
-                                if (controller.currentIndex != null &&
-                                    (controller.currentPlaylist != null ||
-                                        controller.currentAlbum != null)) {
-                                  await controller.player.pause();
-                                  controller.playNext();
-                                } else {
-                                  controller.musicSnackbar(
-                                      "Tidak bisa memutar musik selanjutnya idx(${controller.currentIndex})");
-                                }
-                              },
-                              icon: const Icon(Icons.skip_next,
-                                  color: Colors.white, size: 36)),
+                            onPressed: () async {
+                              if (controller.currentIndex != null &&
+                                  (controller.currentPlaylist != null ||
+                                      controller.currentAlbum != null)) {
+                                await controller.player.pause();
+                                controller.playPrevious();
+                              } else {
+                                controller.musicSnackbar(
+                                    "Tidak bisa memutar musik sebelumnya");
+                              }
+                            },
+                            icon: Icon(
+                              Icons.skip_previous,
+                              color: primaryTextColor,
+                              size: 36,
+                            ),
+                          ),
+                          StreamBuilder<PlayerState>(
+                            stream: controller.player.playerStateStream,
+                            builder: (context, snapshot) {
+                              final playerState = snapshot.data;
+                              final processingState = playerState?.processingState;
+                              final playing = playerState?.playing;
+
+                              if (processingState == ProcessingState.loading ||
+                                  processingState == ProcessingState.buffering) {
+                                return Container(
+                                  margin: EdgeInsets.all(8.0),
+                                  width: 60.0,
+                                  height: 60.0,
+                                  child: CircularProgressIndicator(
+                                    color: primaryTextColor,
+                                  ),
+                                );
+                              } else if (playing != true) {
+                                return IconButton(
+                                  icon: Icon(Icons.play_circle, size: 60),
+                                  color: primaryTextColor,
+                                  onPressed: controller.player.play,
+                                );
+                              } else if (processingState != ProcessingState.completed) {
+                                return IconButton(
+                                  icon: Icon(Icons.pause, size: 60),
+                                  color: primaryTextColor,
+                                  onPressed: controller.player.pause,
+                                );
+                              } else {
+                                return IconButton(
+                                  icon: Icon(Icons.replay, size: 60),
+                                  color: primaryTextColor,
+                                  onPressed: () => controller.player.seek(Duration.zero),
+                                );
+                              }
+                            },
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              if (controller.currentIndex != null &&
+                                  (controller.currentPlaylist != null ||
+                                      controller.currentAlbum != null)) {
+                                await controller.player.pause();
+                                controller.playNext();
+                              } else {
+                                controller.musicSnackbar(
+                                    "Tidak bisa memutar musik selanjutnya"
+                                );
+                              }
+                            },
+                            icon: Icon(
+                              Icons.skip_next,
+                              color: primaryTextColor,
+                              size: 36,
+                            ),
+                          ),
                           IconButton(
                             onPressed: controller.toggleRepeatMode,
-                            icon: Obx(() {
-                              IconData iconData;
-                              Color iconColor;
-                              switch (controller.repeatMode.value) {
-                                case RepeatMode.off:
-                                  iconData = Icons.repeat;
-                                  iconColor = Colors.white;
-                                  break;
-                                case RepeatMode.single:
-                                  iconData = Icons.repeat_one;
-                                  iconColor = AppColors.primaryColor;
-                                  break;
-                                case RepeatMode.playlist:
-                                  iconData = Icons.repeat;
-                                  iconColor = AppColors.primaryColor;
-                                  break;
-                              }
-                              return Icon(iconData, color: iconColor);
-                            }),
+                            icon: StreamBuilder<LoopMode>(
+                              stream: controller.player.loopModeStream,
+                              builder: (context, snapshot) {
+                                final loopMode = snapshot.data ?? LoopMode.off;
+
+                                return Icon(
+                                  loopMode == LoopMode.one ? Icons.repeat_one : Icons.repeat,
+                                  color: loopMode == LoopMode.one
+                                      ? AppColors.primaryColor
+                                      : primaryTextColor,
+                                );
+                              },
+                            ),
                           ),
                         ],
                       ),

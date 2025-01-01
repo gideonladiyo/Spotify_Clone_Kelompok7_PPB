@@ -28,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
         NavigationDelegate(
           onUrlChange: (UrlChange urlChange) {},
           onNavigationRequest: (NavigationRequest request) async {
-            String redirectUrl = 'myapp://spotify-login/callback';
+            String redirectUrl = 'myapp://spotify-kelompok7/callback';
             if (request.url.contains("${redirectUrl}?code")) {
               _controller.loadRequest(Uri.parse("about:blank"));
 

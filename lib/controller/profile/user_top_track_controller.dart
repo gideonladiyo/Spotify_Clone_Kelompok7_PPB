@@ -7,6 +7,7 @@ import '../../data/functions/token_manager.dart';
 class UserTopController extends GetxController {
   var tracks = <Music>[].obs;
   var artists = <Artists>[].obs;
+  RxBool isLoading = false.obs;
 
   @override
   void onInit(){
@@ -15,6 +16,7 @@ class UserTopController extends GetxController {
   }
 
   void getUserTopTracks() async {
+    isLoading.value = true;
     bool isTokenValid = await TokenManager.refreshAccessToken();
     if (!isTokenValid) {
       return;
@@ -22,6 +24,7 @@ class UserTopController extends GetxController {
     try {
       List<Music> musics = await UserApi().getTopTracks();
       tracks.value = musics;
+      isLoading.value = false;
     } catch (e) {
       print('Error user top tracks: $e');
     }
@@ -29,6 +32,7 @@ class UserTopController extends GetxController {
   }
 
   void getUserTopArtists() async{
+    isLoading.value = true;
     bool isTokenValid = await TokenManager.refreshAccessToken();
     if (!isTokenValid) {
       return;
@@ -36,6 +40,7 @@ class UserTopController extends GetxController {
     try {
       List<Artists> loadedArtists = await UserApi().getTopArtists();
       artists.value = loadedArtists;
+      isLoading.value = false;
     } catch (e) {
       print('Error user top tracks: $e');
     }

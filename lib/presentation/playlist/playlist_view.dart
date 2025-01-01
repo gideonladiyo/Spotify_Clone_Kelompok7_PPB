@@ -137,6 +137,26 @@ class PlaylistDetail extends StatelessWidget {
               ),
               if (playlist.authorId != controller.user.value?.userId)
                 _buildFavoriteButton(),
+              // Add the PopupMenuButton for trailing options
+              if (playlist.authorId == controller.user.value?.userId && playlist.id != 'userLikedTrackPlaylist')
+                PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'edit') {
+                      _showEditPlaylistForm(context);
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem<String>(
+                      value: 'edit',
+                      child: Text('Edit'),
+                    ),
+                  ],
+                  icon: const Icon(
+                    Icons.more_vert,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
             ],
           ),
           const SizedBox(height: 8),
@@ -150,6 +170,19 @@ class PlaylistDetail extends StatelessWidget {
           const SizedBox(height: 24),
         ],
       ),
+    );
+  }
+
+  void _showEditPlaylistForm(BuildContext context) {
+    // Pass the current playlist's data to the CreatePlaylistForm
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CreatePlaylistForm(
+          userId: controller.user.value?.userId ?? '',
+          playlist: playlist, // Pass the current playlist to pre-fill the form
+        );
+      },
     );
   }
 
@@ -179,7 +212,13 @@ class PlaylistDetail extends StatelessWidget {
     if (playlist.musics == null || playlist.musics!.isEmpty) {
       return const SliverFillRemaining(
         child: Center(
-          child: CircularProgressIndicator(),
+          child: Text(
+            "Musics Empty",
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold
+            ),
+          ),
         ),
       );
     }
@@ -198,6 +237,90 @@ class PlaylistDetail extends StatelessWidget {
           );
         },
         childCount: playlist.musics!.length,
+      ),
+    );
+  }
+}
+
+class CreatePlaylistForm extends StatelessWidget {
+  final String userId;
+  final PlaylistModel? playlist;
+
+  CreatePlaylistForm({required this.userId, this.playlist});
+  UserController controller = Get.put(UserController());
+
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController nameController = TextEditingController(
+      text: playlist?.title ?? '',
+    );
+    final TextEditingController descController = TextEditingController(
+      text: playlist?.deskripsi ?? '',
+    );
+
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.6,
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              playlist == null ? 'Create Playlist' : 'Edit Playlist', // Change title based on whether it's a new or existing playlist
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(
+                hintText: 'Playlist Name',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: descController,
+              decoration: InputDecoration(
+                hintText: 'Playlist Description',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+            ),
+            SizedBox(height: 10),
+            Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Cancel'),
+                ),
+                SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () async {
+                    await controller.editPlaylist(
+                        userId,
+                        nameController.text,
+                        descController.text,
+                        playlist!.id
+                    );
+                    Navigator.of(context).pop();
+                    await controller.getUserPlaylist();
+                  },
+                  child: Text(
+                    playlist == null ? 'Create' : 'Save',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

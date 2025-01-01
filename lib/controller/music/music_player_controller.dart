@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spotify_group7/controller/profile/user_controller.dart';
@@ -8,20 +7,12 @@ import 'package:spotify_group7/data/models/playlist.dart';
 import 'package:spotify_group7/data/models/album.dart';
 import 'package:spotify_group7/data/repositories/music/music_api.dart';
 import 'package:spotify_group7/data/functions/token_manager.dart';
-
-enum RepeatMode {
-  off,
-  single,
-  playlist
-}
+import 'package:just_audio/just_audio.dart';
 
 class MusicController extends GetxController {
   final player = AudioPlayer();
   final Rx<Music?> currentMusic = Rx<Music?>(null);
   final RxBool isPlaying = false.obs;
-  final Rx<RepeatMode> repeatMode = RepeatMode.off.obs;
-  final Rx<Duration> currentDuration = Duration.zero.obs;
-  final Rx<Duration> totalDuration = const Duration(minutes: 4).obs;
   final RxBool isPlayerVisible = false.obs;
   final RxBool isSongLiked = false.obs;
 
@@ -37,26 +28,37 @@ class MusicController extends GetxController {
     _setupPlayerListeners();
   }
 
+  void togglePlay() async {
+    if (player.playing) {
+      await player.pause();
+    } else {
+      await player.play();
+    }
+  }
+
   void navigateToMusicPlayer({
     required Music music,
     PlaylistModel? playlist,
     Albums? album,
     int? idx,
   }) {
-    playMusic(music, playlist: playlist, album: album, idx: idx);
+    if (isPlaying.value){
+      if (currentMusic.value!.trackId != music.trackId){
+        playMusic(music, playlist: playlist, album: album, idx: idx);
+      }
+    } else{
+      playMusic(music, playlist: playlist, album: album, idx: idx);
+    }
     Get.toNamed('/music-player');
   }
 
   void _setupPlayerListeners() {
-    player.onPositionChanged.listen((position) {
-      currentDuration.value = position;
-      if (position >= totalDuration.value) {
+    player.playerStateStream.listen((state) {
+      isPlaying.value = state.playing;
+      // Handle completion
+      if (state.processingState == ProcessingState.completed) {
         handleSongCompletion();
       }
-    });
-
-    player.onPlayerStateChanged.listen((state) {
-      isPlaying.value = state == PlayerState.playing;
     });
   }
 
@@ -69,59 +71,6 @@ class MusicController extends GetxController {
     isPlayerVisible.value = true;
 
     await _loadAndPlayMusic();
-  }
-
-  void toggleRepeatMode() {
-    switch (repeatMode.value) {
-      case RepeatMode.off:
-        repeatMode.value = RepeatMode.single;
-        break;
-      case RepeatMode.single:
-        repeatMode.value = RepeatMode.playlist;
-        break;
-      case RepeatMode.playlist:
-        repeatMode.value = RepeatMode.off;
-        break;
-    }
-  }
-
-  void handleSongCompletion() async {
-    switch (repeatMode.value) {
-      case RepeatMode.single:
-        // Putar ulang lagu yang sama
-        await player.seek(Duration.zero);
-        await player.resume();
-        break;
-
-      case RepeatMode.playlist:
-        if (currentPlaylist != null || currentAlbum != null) {
-          playNext();
-        } else {
-          // Jika single track, perlakukan seperti repeat single
-          await player.seek(Duration.zero);
-          await player.resume();
-        }
-        break;
-
-      case RepeatMode.off:
-        if (currentPlaylist != null || currentAlbum != null) {
-          var maxIndex = currentPlaylist?.musics?.length ??
-              currentAlbum?.musics?.length ??
-              0;
-          if (currentIndex!.value < maxIndex - 1) {
-            playNext();
-          } else {
-            // Berhenti di akhir playlist
-            await player.pause();
-            isPlaying.value = false;
-          }
-        } else {
-          // Single track berhenti di akhir
-          await player.pause();
-          isPlaying.value = false;
-        }
-        break;
-    }
   }
 
   Future<void> _loadAndPlayMusic() async {
@@ -147,7 +96,7 @@ class MusicController extends GetxController {
 
       final yt = YoutubeExplode();
       final video = (await yt.search
-              .search("${musicData.songName} ${musicData.artistName ?? ""}"))
+          .search("${musicData.songName} ${musicData.artistName ?? ""}"))
           .first;
       final videoId = video.id.value;
 
@@ -155,39 +104,71 @@ class MusicController extends GetxController {
       currentMusic.value?.duration = video.duration;
       checkTrackSaved(currentMusic.value!.trackId);
       currentMusic.refresh();
-      totalDuration.value = video.duration ?? const Duration(minutes: 4);
 
       var manifest = await yt.videos.streamsClient.getManifest(videoId);
       var audioUrl = manifest.audioOnly.last.url;
-      await player.play(UrlSource(audioUrl.toString()));
+
+      // Menggunakan just_audio untuk memuat dan memutar audio
+      await player.setUrl(audioUrl.toString());
+      await player.play();
     } catch (e) {
       print("Error loading music: $e");
     }
   }
 
-  void togglePlay() async {
-    if (isPlaying.value) {
-      await player.pause();
+  void toggleRepeatMode() {
+    // Toggle hanya antara off dan one
+    if (player.loopMode == LoopMode.off) {
+      player.setLoopMode(LoopMode.one);
     } else {
-      await player.resume();
+      player.setLoopMode(LoopMode.off);
     }
   }
 
-  void seekTo(Duration position) {
-    player.seek(position);
+  void handleSongCompletion() async {
+    if (currentPlaylist != null || currentAlbum != null) {
+      var maxIndex = currentPlaylist?.musics?.length ??
+          currentAlbum?.musics?.length ??
+          0;
+
+      switch (player.loopMode) {
+        case LoopMode.off:
+          if (currentIndex!.value < maxIndex - 1) {
+            playNext();
+          }
+          break;
+
+        case LoopMode.one:
+          await player.seek(Duration.zero);
+          await player.play();
+          break;
+
+        default:
+        // Handle any other case as LoopMode.off
+          if (currentIndex!.value < maxIndex - 1) {
+            playNext();
+          }
+          break;
+      }
+    } else {
+      // Jika single track
+      if (player.loopMode == LoopMode.one) {
+        await player.seek(Duration.zero);
+        await player.play();
+      }
+    }
   }
 
   void playNext() async {
     if (currentIndex != null &&
         (currentPlaylist != null || currentAlbum != null)) {
-      await player.pause();
       var maxIndex =
           currentPlaylist?.musics?.length ?? currentAlbum?.musics?.length ?? 0;
 
       if (currentIndex!.value < maxIndex - 1) {
         currentIndex!.value++;
         await _loadAndPlayMusic();
-      } else if (repeatMode.value == RepeatMode.playlist) {
+      } else if (player.loopMode == LoopMode.all) {
         currentIndex!.value = 0;
         await _loadAndPlayMusic();
       }
@@ -197,22 +178,19 @@ class MusicController extends GetxController {
   void playPrevious() async {
     if (currentIndex != null &&
         (currentPlaylist != null || currentAlbum != null)) {
-      await player.pause();
       if (currentIndex!.value > 0) {
         currentIndex!.value--;
         await _loadAndPlayMusic();
-      } else if (repeatMode.value == RepeatMode.playlist) {
-        currentIndex!.value = (currentPlaylist?.musics?.length ??
-                currentAlbum?.musics?.length ??
-                1) -
-            1;
+      } else if (player.loopMode == LoopMode.all) {
+        currentIndex!.value =
+            (currentPlaylist?.musics?.length ?? currentAlbum?.musics?.length ?? 1) - 1;
         await _loadAndPlayMusic();
       }
     }
   }
 
   void musicSnackbar(String message) {
-    Get.snackbar("Error!", message);
+    Get.snackbar("Oopss!", message, backgroundColor: Colors.white, colorText: Colors.black);
   }
 
   void musicSnackbarSuccess(String message) {

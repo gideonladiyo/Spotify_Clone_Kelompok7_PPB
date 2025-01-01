@@ -42,7 +42,7 @@ class ArtistView extends StatelessWidget {
   }
 
   Widget _buildSliverAppBar() {
-    return SliverAppBar(
+    return const SliverAppBar(
       backgroundColor: AppColors.secondaryColor,
       expandedHeight: 120,
       floating: false,
@@ -54,12 +54,6 @@ class ArtistView extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.share_outlined),
-          onPressed: () {},
-        ),
-      ],
     );
   }
 

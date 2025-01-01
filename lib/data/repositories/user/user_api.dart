@@ -92,13 +92,13 @@ class UserApi {
   }
 
   Future<void> createPlaylist(String userId, String playlistName,
-      String playlistDescription, bool isPublic) async {
+      String playlistDescription) async {
     final String endPoint =
         'https://api.spotify.com/v1/users/$userId/playlists';
     final Map<String, dynamic> body = {
       'name': playlistName,
       'description': playlistDescription,
-      'public': isPublic
+      'public': true
     };
 
     try {
@@ -116,6 +116,37 @@ class UserApi {
         print("Playlist berhasil dibuat");
       } else {
         print("playlist gagal dibuat");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> editPlaylist(String userId, String playlistName,
+      String playlistDescription, String playlistId) async {
+    final String endPoint =
+        'https://api.spotify.com/v1/playlists/$playlistId';
+    final Map<String, dynamic> body = {
+      'name': playlistName,
+      'description': playlistDescription,
+      'public': true
+    };
+
+    try {
+      if (_authToken.isEmpty) {
+        throw Exception('Auth token is null or empty');
+      }
+      final response = await http.put(Uri.parse(endPoint),
+          headers: {
+            'Authorization': _authToken,
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(body));
+
+      if (response.statusCode == 200) {
+        print("Playlist berhasil diedit");
+      } else {
+        print("playlist gagal diedit");
       }
     } catch (e) {
       print(e);

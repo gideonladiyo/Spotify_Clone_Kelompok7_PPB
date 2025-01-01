@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spotify_group7/controller/playlist/playlist_controller.dart';
+import 'package:spotify_group7/controller/profile/user_controller.dart';
 import 'package:spotify_group7/data/functions/text_controller.dart';
 import 'package:spotify_group7/design_system/widgets/song_card/playlist_item.dart';
 import 'package:spotify_group7/presentation/playlist/playlist_view.dart';
@@ -9,6 +10,7 @@ import 'package:spotify_group7/presentation/playlist/playlist_view.dart';
 class ListPlaylist extends StatelessWidget {
   ListPlaylist({super.key});
   final PlaylistController controller = Get.put(PlaylistController());
+  final UserController userController = Get.put(UserController());
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class ListPlaylist extends StatelessWidget {
                     final playlist = controller.playlists[index];
                     return GestureDetector(
                       onTap: () {
+                        userController.checkPlaylistSaved(playlist.id);
                         Navigator.push(
                           context,
                           MaterialPageRoute(

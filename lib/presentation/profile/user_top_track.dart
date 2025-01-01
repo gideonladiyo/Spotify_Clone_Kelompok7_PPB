@@ -15,8 +15,18 @@ class TopTracks extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {
-          if (controller.artists.isEmpty) {
+          if (controller.isLoading.value) {
             return const Center(child: CircularProgressIndicator());
+          } else if (controller.tracks.isEmpty) {
+            return const Center(
+              child: Text(
+                "No Top Tracks Yet",
+                style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold
+                ),
+              ),
+            );
           }
 
           return ListView.builder(

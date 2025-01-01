@@ -80,7 +80,6 @@ class MusicTile extends StatelessWidget {
                   await userController.removeTrackFromPlaylist(
                       music.uri, playlist!.id, playlist!);
                   await userController.getUserPlaylist();
-                  Navigator.pop(context);
                 },
               ),
               ListTile(
@@ -122,7 +121,6 @@ class MusicTile extends StatelessWidget {
       },
     );
   }
-
   void _showAddToPlaylistBottomSheet(
       BuildContext context, UserController userController) {
     showModalBottomSheet(

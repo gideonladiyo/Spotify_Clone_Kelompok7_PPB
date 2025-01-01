@@ -1,7 +1,7 @@
 class CustomStrings {
-  static const String clientId = '55a7b8fce8fa495596b839a8577ce612';
-  static const String clientSecret = '07d19074fb6943978b8435a69be4c9da';
+  static const String clientId = 'your client id';
+  static const String clientSecret = 'your client secret';
   static String? accessToken;
   static String? refreshToken;
-  static String redirectUri = 'myapp://spotify-login/callback';
+  static String redirectUri = 'myapp://spotify-kelompok7/callback';
 }

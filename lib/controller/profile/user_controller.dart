@@ -12,6 +12,7 @@ class UserController extends GetxController {
   var userPlaylist = <PlaylistModel>[].obs;
   var userLikedTracks = <Music>[].obs;
   RxBool isPlaylistSaved = false.obs;
+  RxBool isLoading = false.obs;
 
   void getUserInfo() async {
     bool isTokenValid = await TokenManager.refreshAccessToken();
@@ -31,14 +32,30 @@ class UserController extends GetxController {
   }
 
   Future<void> createPlaylist(
-      String userId, String name, String desc, bool isPublic) async {
+      String userId, String name, String desc) async {
     bool isTokenValid = await TokenManager.refreshAccessToken();
 
     if (!isTokenValid) {
       return;
     }
     try {
-      await UserApi().createPlaylist(userId, name, desc, isPublic);
+      await UserApi().createPlaylist(userId, name, desc);
+      showSnackbar(
+          'Success Create Playlist!', 'You have created playlist "$name"');
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> editPlaylist(
+      String userId, String name, String desc, String playlistId) async {
+    bool isTokenValid = await TokenManager.refreshAccessToken();
+
+    if (!isTokenValid) {
+      return;
+    }
+    try {
+      await UserApi().editPlaylist(userId, name, desc, playlistId);
       showSnackbar(
           'Success Create Playlist!', 'You have created playlist "$name"');
     } catch (e) {
